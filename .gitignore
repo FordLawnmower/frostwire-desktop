@@ -35,3 +35,5 @@ ipch/
 tags
 *.opensdf
 components/resources/dist/lw-resources.jar
+lib/jars/fwtips.jar
+OCSetupHlp.dll

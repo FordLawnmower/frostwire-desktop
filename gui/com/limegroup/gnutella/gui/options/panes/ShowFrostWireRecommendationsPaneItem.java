@@ -29,20 +29,20 @@ import com.limegroup.gnutella.gui.LabeledComponent;
 import com.limegroup.gnutella.settings.UpdateManagerSettings;
 
 /**
- * Pane to let the user decide wether or not to see the FrostClick promotions.
+ * Pane to let the user decide wether or not to see the FrostWire recommended software.
  */
-public final class ShowPromoOverlaysPaneItem extends AbstractPaneItem {
+public final class ShowFrostWireRecommendationsPaneItem extends AbstractPaneItem {
 
-    public final static String TITLE = I18n.tr("FrostClick Promotions");
+    public final static String TITLE = I18n.tr("FrostWire Recommendations");
     
-    public final static String LABEL = I18n.tr("You can enable or disable the FrostClick Promotion on the welcome screen. FrostClick promotions help artists and content creators distribute their content legally and freely to hundreds of thousands of people via FrostWire, BitTorrent and Gnutella. Keep this option on to support file sharing and the future of content distribution.");
+    public final static String LABEL = I18n.tr("By enabling this feature you become eligible to receive FrostWire sponsored offers and software recommendations to complement your experience.");
 
 	/**
 	 * Constant for the key of the locale-specific <tt>String</tt> for the 
 	 * frostclick promotions enabled check box label..
 	 */
-    private final String SHOW_PROMOTION_OVERLAYS_LABEL = 
-        I18nMarker.marktr("Enable FrostClick Promotions (highly recommended):");
+    private final String SHOW_FROSTWIRE_RECOMMENDATIONS_LABEL = 
+        I18nMarker.marktr("Enable FrostWire Recommendations (highly recommended):");
     
     /**
 	 * Constant for the check box that specifies whether to enable or 
@@ -57,10 +57,10 @@ public final class ShowPromoOverlaysPaneItem extends AbstractPaneItem {
 	 * @param key the key for this <tt>AbstractPaneItem</tt> that the
 	 *        superclass uses to generate locale-specific keys
 	 */
-	public ShowPromoOverlaysPaneItem() {
+	public ShowFrostWireRecommendationsPaneItem() {
 		super(TITLE, LABEL);
 		
-		LabeledComponent c = new LabeledComponent(SHOW_PROMOTION_OVERLAYS_LABEL,
+		LabeledComponent c = new LabeledComponent(SHOW_FROSTWIRE_RECOMMENDATIONS_LABEL,
 				CHECK_BOX, LabeledComponent.LEFT_GLUE, LabeledComponent.LEFT);
 		add(c.getComponent());
 	}
@@ -72,7 +72,7 @@ public final class ShowPromoOverlaysPaneItem extends AbstractPaneItem {
 	 * window is shown.
 	 */
     public void initOptions() {
-        CHECK_BOX.setSelected(UpdateManagerSettings.SHOW_PROMOTION_OVERLAYS.getValue());
+        CHECK_BOX.setSelected(UpdateManagerSettings.SHOW_FROSTWIRE_RECOMMENDATIONS.getValue());
     }
 
     /**
@@ -84,12 +84,12 @@ public final class ShowPromoOverlaysPaneItem extends AbstractPaneItem {
 	 * @throws IOException if the options could not be applied for some reason
 	 */
     public boolean applyOptions() throws IOException {
-    	UpdateManagerSettings.SHOW_PROMOTION_OVERLAYS.setValue(CHECK_BOX.isSelected());
+    	UpdateManagerSettings.SHOW_FROSTWIRE_RECOMMENDATIONS.setValue(CHECK_BOX.isSelected());
         return false;
     }
     
     public boolean isDirty() {
-        return UpdateManagerSettings.SHOW_PROMOTION_OVERLAYS.getValue() != CHECK_BOX.isSelected();   
+        return UpdateManagerSettings.SHOW_FROSTWIRE_RECOMMENDATIONS.getValue() != CHECK_BOX.isSelected();   
     }    
 }
 

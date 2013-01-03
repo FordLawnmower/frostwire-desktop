@@ -41,11 +41,12 @@ import com.aelitis.azureus.core.AzureusCore;
 import com.frostwire.AzureusStarter;
 import com.frostwire.bittorrent.websearch.WebSearchResult;
 import com.frostwire.core.FileDescriptor;
+import com.frostwire.gui.TipsClient;
 import com.frostwire.gui.bittorrent.BTDownloadActions.PlaySingleAudioFileAction;
 import com.frostwire.gui.filters.TableLineFilter;
 import com.frostwire.gui.library.LibraryUtils;
-import com.frostwire.gui.transfers.PeerHttpUpload;
 import com.frostwire.gui.player.MediaPlayer;
+import com.frostwire.gui.transfers.PeerHttpUpload;
 import com.limegroup.gnutella.gui.GUIMediator;
 import com.limegroup.gnutella.gui.I18n;
 import com.limegroup.gnutella.gui.PaddedPanel;
@@ -64,6 +65,7 @@ import com.limegroup.gnutella.settings.ApplicationSettings;
 import com.limegroup.gnutella.settings.BittorrentSettings;
 import com.limegroup.gnutella.settings.QuestionsHandler;
 import com.limegroup.gnutella.settings.TablesHandlerSettings;
+import com.limegroup.gnutella.settings.UpdateManagerSettings;
 
 /**
  * This class acts as a mediator between all of the components of the
@@ -305,6 +307,10 @@ public final class BTDownloadMediator extends AbstractTableMediator<BTDownloadRo
 		}
         
 		clearInactiveAction.setEnabled(anyClearable);
+		
+		if (OSUtils.isWindows() && UpdateManagerSettings.SHOW_FROSTWIRE_RECOMMENDATIONS.getValue()) {
+		    TipsClient.instance().call();
+		}
     }
 
     public int getActiveDownloads() {
@@ -810,6 +816,17 @@ public final class BTDownloadMediator extends AbstractTableMediator<BTDownloadRo
             downloaders.add(downloader);
         }
         return downloaders.toArray(new BTDownload[0]);
+    }
+    
+    public List<BTDownload> getDownloads() {
+        int count = TABLE.getRowCount();
+        List<BTDownload> downloads = new ArrayList<BTDownload>(count);
+        for (int i = 0; i < count; i++) {
+            BTDownloadDataLine line = DATA_MODEL.get(i);
+            BTDownload downloader = line.getInitializeObject();
+            downloads.add(downloader);
+        }
+        return downloads;
     }
 
     public long getTotalBytesDownloaded() {
