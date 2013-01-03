@@ -32,6 +32,7 @@ messages.mo
 _UpgradeReport_Files/
 Debug/
 Release/
+build/
 ipch/
 tags
 *.opensdf
