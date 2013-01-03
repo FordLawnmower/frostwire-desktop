@@ -35,6 +35,8 @@ import java.awt.event.WindowStateListener;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -54,6 +56,7 @@ import com.frostwire.gui.tabs.Tab;
 import com.limegroup.gnutella.gui.GUIMediator.Tabs;
 import com.limegroup.gnutella.gui.dnd.DNDUtils;
 import com.limegroup.gnutella.gui.dnd.TransferHandlerDropTargetListener;
+import com.limegroup.gnutella.gui.fw6ui.MediaPlayerPanel;
 import com.limegroup.gnutella.gui.menu.MenuMediator;
 import com.limegroup.gnutella.gui.options.OptionsMediator;
 import com.limegroup.gnutella.gui.search.MagnetClipboardListener;
@@ -103,6 +106,8 @@ public final class MainFrame implements RefreshListener, ThemeObserver {
      */
     private StatusLine STATUS_LINE;
 
+    private MediaPlayerPanel MEDIAPLAYER_PANEL;
+    
     /**
      * Handle the <tt>MenuMediator</tt> for use in changing the menu
      * depending on the selected tab.
@@ -239,8 +244,11 @@ public final class MainFrame implements RefreshListener, ThemeObserver {
         //ADD TABBED PANE
         contentPane.add(TABBED_PANE, BorderLayout.CENTER);
 
-        //ADD STATUS LINE
-        contentPane.add(getStatusLine().getComponent(), BorderLayout.PAGE_END);
+        // STATUS / MEDIA PLAYER PANE - adding status line stacked below media player
+        Box status_media = new Box(BoxLayout.PAGE_AXIS);
+        status_media.add( getMediaPlayerRowPanel() );
+        status_media.add( getStatusLine().getComponent() );
+        contentPane.add(status_media, BorderLayout.PAGE_END);
 
         ThemeMediator.addThemeObserver(this);
         GUIMediator.addRefreshListener(this);
@@ -434,6 +442,14 @@ public final class MainFrame implements RefreshListener, ThemeObserver {
             STATUS_LINE = new StatusLine();
         }
         return STATUS_LINE;
+    }
+    
+    final private MediaPlayerPanel getMediaPlayerRowPanel() {
+    	if (MEDIAPLAYER_PANEL == null) {
+    		MEDIAPLAYER_PANEL = new MediaPlayerPanel();
+    	}
+    	
+    	return MEDIAPLAYER_PANEL;
     }
 
     /**

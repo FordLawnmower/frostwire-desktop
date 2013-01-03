@@ -32,7 +32,6 @@ import org.pushingpixels.trident.Timeline;
 import org.pushingpixels.trident.Timeline.TimelineState;
 import org.pushingpixels.trident.callback.TimelineCallbackAdapter;
 
-import com.frostwire.gui.player.MediaPlayerComponent;
 import com.frostwire.gui.tabs.Tab;
 import com.frostwire.gui.updates.UpdateMediator;
 import com.limegroup.gnutella.gui.GUIMediator.Tabs;
@@ -68,7 +67,8 @@ public class ApplicationHeader extends JPanel implements ThemeObserver, RefreshL
 
     /** image used for the background */
     private Image tile;
-
+    private static final Dimension BACKGROUND_IMAGE_SIZE = new Dimension(16, 54);
+    
     /** Button background for selected button */
     private final Image headerButtonBackgroundSelected;
     
@@ -80,6 +80,8 @@ public class ApplicationHeader extends JPanel implements ThemeObserver, RefreshL
     private JLabel updateButton;
     private ImageIcon updateImageButtonOn;
     private ImageIcon updateImageButtonOff;
+    
+    JPanel buttonContainer;
     
     /** Contains the Update Button and the Player */
     private JPanel eastPanel;
@@ -100,7 +102,6 @@ public class ApplicationHeader extends JPanel implements ThemeObserver, RefreshL
         
         addEastPanel();
         addUpdateButton();
-        addAudioPlayerComponent();
         
         GUIMediator.addRefreshListener(this);
         
@@ -108,8 +109,17 @@ public class ApplicationHeader extends JPanel implements ThemeObserver, RefreshL
     }
 
     private void addEastPanel() {
+    	
+    	// determine tab buttonContainer's size and use it to fill the east panel.
+    	// this will allow the frostwire image to be centered in the screen versus
+    	// centered across the remaining borderlayout space.
+    	assert (buttonContainer != null) : "ERROR: addTabButtons() must be called before addEastPanel()";
+    	Dimension dim = buttonContainer.getPreferredSize();
+    	
         eastPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,10,0));
         eastPanel.setOpaque(false);
+        eastPanel.setMaximumSize(dim);
+        eastPanel.setPreferredSize(dim);
         add(eastPanel, BorderLayout.LINE_END);
     }
 
@@ -120,40 +130,17 @@ public class ApplicationHeader extends JPanel implements ThemeObserver, RefreshL
     @Override
     protected void paintComponent(Graphics g) {
         //paint tiled background
-        for (int i = 0; i < getWidth(); i+=16) {
-            g.drawImage(tile,i,0,null);
+        for( int y=0; y < getHeight(); y+=BACKGROUND_IMAGE_SIZE.height ) {
+        	for (int x = 0; x < getWidth(); x+=BACKGROUND_IMAGE_SIZE.width ) {
+                g.drawImage(tile,x,y,null);
+            }	
         }
     }
 
     private void setSizes() {
-        setMinimumSize(new Dimension(1, 54));
-        setPreferredSize(new Dimension(Integer.MAX_VALUE, 54));
-        setMaximumSize(new Dimension(Integer.MAX_VALUE, 54));
-    }
-
-    private void addAudioPlayerComponent() {
-        final JPanel mediaPanel = new MediaPlayerComponent().getMediaPanel(true);
-        mediaPanel.setMinimumSize(new Dimension(300,45));
-        mediaPanel.setPreferredSize(new Dimension(300,45));
-        
-        mediaPanel.setBorder(BorderFactory.createEmptyBorder(2,1,6,11));
-
-        final Image audioPlayerBackground = GUIMediator.getThemeImage("audio_player_background").getImage();
-        
-        @SuppressWarnings("serial")
-        final JPanel mediaPanelFrame = new JPanel() {
-           @Override
-           protected void paintComponent(Graphics g) {
-               g.drawImage(audioPlayerBackground, 0, (getHeight()-mediaPanel.getHeight())/2,null);
-               super.paintComponent(g);
-           }
-        };
-        
-        //mediaPanelFrame.setBorder(BorderFactory.createEmptyBorder(4,1,6,11));
-        mediaPanelFrame.setOpaque(false);
-        mediaPanelFrame.add(mediaPanel);
-        
-        eastPanel.add(mediaPanelFrame);
+        setMinimumSize(new Dimension(1, BACKGROUND_IMAGE_SIZE.height));
+        setPreferredSize(new Dimension(Integer.MAX_VALUE, BACKGROUND_IMAGE_SIZE.height));
+        setMaximumSize(new Dimension(Integer.MAX_VALUE, BACKGROUND_IMAGE_SIZE.height));
     }
 
     private void addUpdateButton() {
@@ -195,7 +182,7 @@ public class ApplicationHeader extends JPanel implements ThemeObserver, RefreshL
         GridLayout gridLayout = new GridLayout(1, GUIMediator.Tabs.values().length);
         gridLayout.setHgap(8);
         
-        JPanel buttonContainer = new JPanel(gridLayout);
+        buttonContainer = new JPanel(gridLayout);
         buttonContainer.setBorder(BorderFactory.createEmptyBorder(8,8,8,32));
         buttonContainer.setOpaque(false);
         ButtonGroup group = new ButtonGroup();
