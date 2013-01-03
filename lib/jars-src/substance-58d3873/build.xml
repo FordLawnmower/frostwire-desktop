@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project name="substance" default="all">
-	<property file="local.build.properties" />
+        <property environment="env"/>
+        <property file="local.build.properties" />
 	<property file="build.properties" />
+        
 
 	<!-- Compiler options -->
 	<patternset id="javac.excluded" />
