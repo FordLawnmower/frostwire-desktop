@@ -24,9 +24,7 @@ public class MediaPlayerPanel extends JPanel {
 		initializeUI();
 	}
 	
-	private void initializeUI() {
-		//setUI(new BasicPanelUI());
-		
+	private void initializeUI() {		
 		setBackground(BACKGROUND_COLOR);
 		setOpaque(true);
 		setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
@@ -37,25 +35,5 @@ public class MediaPlayerPanel extends JPanel {
 		add(MPUtils.createSeparator(SwingConstants.VERTICAL));
 		add(new MPVolumePanel());
 	}
-	
-	/*
-	@Override
-	public void paint(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g.create();
-        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-        
-        super.paint(g2);
-        
-        g2.dispose();
-    }
-	*/
-	/*
-	@Override
-	public void paintComponent(Graphics g) {
-		
-		//g.setColor(BACKGROUND_COLOR);
-		//g.fillRect(0, 0, getWidth()	, getHeight());
-		super.paintComponent(g);
-	}
-	*/
+
 }

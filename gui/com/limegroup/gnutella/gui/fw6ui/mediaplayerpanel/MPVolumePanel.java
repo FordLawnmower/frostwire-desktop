@@ -44,8 +44,6 @@ public class MPVolumePanel extends JPanel {
 	
 	private void initializeUI() {
 		
-		//setUI(new BasicPanelUI());
-		
 		setLayout(new BoxLayout( this, BoxLayout.PAGE_AXIS));
 		setOpaque(false);
 		setBackground(new Color(0,0,0,255));
