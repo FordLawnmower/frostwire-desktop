@@ -42,107 +42,68 @@ import org.pushingpixels.substance.api.shaper.ClassicButtonShaper;
  *
  */
 public class NextSkin extends SubstanceSkin {
-	
+
     public static final String NAME = "Next";
 
-	public NextSkin() {
-		SubstanceSkin.ColorSchemes schemes = SubstanceSkin
-				.getColorSchemes("org/limewire/gui/resources/next.colorschemes");
+    public NextSkin() {
+        SubstanceSkin.ColorSchemes schemes = SubstanceSkin.getColorSchemes("org/limewire/gui/resources/next.colorschemes");
 
-		SubstanceColorScheme activeScheme = schemes.get("Next Active");
-		SubstanceColorScheme enabledScheme = schemes.get("Next Enabled");
-		SubstanceColorScheme disabledScheme = schemes.get("Next Disabled");
+        SubstanceColorScheme activeScheme = schemes.get("Next Active");
+        SubstanceColorScheme enabledScheme = schemes.get("Next Enabled");
+        SubstanceColorScheme disabledScheme = schemes.get("Next Disabled");
 
-		SubstanceColorSchemeBundle defaultSchemeBundle = new SubstanceColorSchemeBundle(
-				activeScheme, enabledScheme, disabledScheme);
+        SubstanceColorSchemeBundle defaultSchemeBundle = new SubstanceColorSchemeBundle(activeScheme, enabledScheme, disabledScheme);
 
-		// borders
-		SubstanceColorScheme activeBorderScheme = schemes
-				.get("Next Active Border");
-		SubstanceColorScheme enabledBorderScheme = schemes
-				.get("Next Enabled Border");
-		SubstanceColorScheme disabledBorderScheme = schemes
-				.get("Next Enabled Border");
-		defaultSchemeBundle.registerColorScheme(enabledBorderScheme,
-				ColorSchemeAssociationKind.BORDER, ComponentState.ENABLED);
-		defaultSchemeBundle.registerColorScheme(activeBorderScheme,
-				ColorSchemeAssociationKind.BORDER, ComponentState.DEFAULT);
-		defaultSchemeBundle.registerColorScheme(disabledBorderScheme,
-				ColorSchemeAssociationKind.BORDER,
-				ComponentState.DISABLED_DEFAULT,
-				ComponentState.DISABLED_SELECTED,
-				ComponentState.DISABLED_UNSELECTED);
+        // borders
+        SubstanceColorScheme activeBorderScheme = schemes.get("Next Active Border");
+        SubstanceColorScheme enabledBorderScheme = schemes.get("Next Enabled Border");
+        SubstanceColorScheme disabledBorderScheme = schemes.get("Next Enabled Border");
+        defaultSchemeBundle.registerColorScheme(enabledBorderScheme, ColorSchemeAssociationKind.BORDER, ComponentState.ENABLED);
+        defaultSchemeBundle.registerColorScheme(activeBorderScheme, ColorSchemeAssociationKind.BORDER, ComponentState.DEFAULT);
+        defaultSchemeBundle.registerColorScheme(disabledBorderScheme, ColorSchemeAssociationKind.BORDER, ComponentState.DISABLED_DEFAULT, ComponentState.DISABLED_SELECTED, ComponentState.DISABLED_UNSELECTED);
 
-		// states
-		SubstanceColorScheme defaultScheme = schemes.get("Next Default");
-		SubstanceColorScheme defaultBorderScheme = schemes
-				.get("Next Default Border");
-		defaultSchemeBundle.registerColorScheme(defaultScheme,
-				ComponentState.DEFAULT);
-		defaultSchemeBundle.registerColorScheme(defaultBorderScheme,
-				ColorSchemeAssociationKind.BORDER, ComponentState.DEFAULT);
+        // states
+        SubstanceColorScheme defaultScheme = schemes.get("Next Default");
+        SubstanceColorScheme defaultBorderScheme = schemes.get("Next Default Border");
+        defaultSchemeBundle.registerColorScheme(defaultScheme, ComponentState.DEFAULT);
+        defaultSchemeBundle.registerColorScheme(defaultBorderScheme, ColorSchemeAssociationKind.BORDER, ComponentState.DEFAULT);
 
-		SubstanceColorScheme pressedScheme = schemes.get("Next Pressed");
-		SubstanceColorScheme pressedBorderScheme = schemes
-				.get("Next Pressed Border");
-		defaultSchemeBundle.registerColorScheme(pressedScheme,
-				ComponentState.PRESSED_SELECTED,
-				ComponentState.PRESSED_UNSELECTED);
-		defaultSchemeBundle.registerColorScheme(pressedBorderScheme,
-				ColorSchemeAssociationKind.BORDER,
-				ComponentState.PRESSED_SELECTED,
-				ComponentState.PRESSED_UNSELECTED);
+        SubstanceColorScheme pressedScheme = schemes.get("Next Pressed");
+        SubstanceColorScheme pressedBorderScheme = schemes.get("Next Pressed Border");
+        defaultSchemeBundle.registerColorScheme(pressedScheme, ComponentState.PRESSED_SELECTED, ComponentState.PRESSED_UNSELECTED);
+        defaultSchemeBundle.registerColorScheme(pressedBorderScheme, ColorSchemeAssociationKind.BORDER, ComponentState.PRESSED_SELECTED, ComponentState.PRESSED_UNSELECTED);
 
-		SubstanceColorScheme selectedScheme = schemes.get("Next Selected");
-		SubstanceColorScheme selectedBorderScheme = schemes
-				.get("Next Selected Border");
-		defaultSchemeBundle.registerColorScheme(selectedScheme,
-				ComponentState.SELECTED, ComponentState.ROLLOVER_SELECTED);
-		defaultSchemeBundle.registerColorScheme(selectedBorderScheme,
-				ColorSchemeAssociationKind.BORDER, ComponentState.SELECTED,
-				ComponentState.ROLLOVER_SELECTED);
+        SubstanceColorScheme selectedScheme = schemes.get("Next Selected");
+        SubstanceColorScheme selectedBorderScheme = schemes.get("Next Selected Border");
+        defaultSchemeBundle.registerColorScheme(selectedScheme, ComponentState.SELECTED, ComponentState.ROLLOVER_SELECTED);
+        defaultSchemeBundle.registerColorScheme(selectedBorderScheme, ColorSchemeAssociationKind.BORDER, ComponentState.SELECTED, ComponentState.ROLLOVER_SELECTED);
 
-		SubstanceColorScheme backgroundScheme = schemes
-				.get("Next Background");
+        SubstanceColorScheme backgroundScheme = schemes.get("Next Background");
 
-		this.registerDecorationAreaSchemeBundle(defaultSchemeBundle,
-				backgroundScheme, DecorationAreaType.NONE);
+        this.registerDecorationAreaSchemeBundle(defaultSchemeBundle, backgroundScheme, DecorationAreaType.NONE);
 
-		this.registerAsDecorationArea(activeScheme,
-				DecorationAreaType.PRIMARY_TITLE_PANE);
+        this.registerAsDecorationArea(activeScheme, DecorationAreaType.PRIMARY_TITLE_PANE);
 
-		this.addOverlayPainter(new BottomLineOverlayPainter(
-				new ColorSchemeSingleColorQuery() {
-					@Override
-					public Color query(SubstanceColorScheme scheme) {
-						return scheme.getDarkColor().darker();
-					}
-				}), DecorationAreaType.PRIMARY_TITLE_PANE);
+        this.addOverlayPainter(new BottomLineOverlayPainter(new ColorSchemeSingleColorQuery() {
+            @Override
+            public Color query(SubstanceColorScheme scheme) {
+                return scheme.getDarkColor().darker();
+            }
+        }), DecorationAreaType.PRIMARY_TITLE_PANE);
 
-		this.buttonShaper = new ClassicButtonShaper();
-		this.watermark = null;
-		this.fillPainter = new FractionBasedFillPainter("Next",
-				new float[] { 0.0f, 0.49999f, 0.5f, 0.65f, 1.0f },
-				new ColorSchemeSingleColorQuery[] {
-						ColorSchemeSingleColorQuery.EXTRALIGHT,
-						ColorSchemeSingleColorQuery.LIGHT,
-						ColorSchemeSingleColorQuery.MID,
-						ColorSchemeSingleColorQuery.LIGHT,
-						ColorSchemeSingleColorQuery.ULTRALIGHT });
+        this.buttonShaper = new ClassicButtonShaper();
+        this.watermark = null;
+        this.fillPainter = new FractionBasedFillPainter("Next", new float[] { 0.0f, 0.49999f, 0.5f, 0.65f, 1.0f }, new ColorSchemeSingleColorQuery[] { ColorSchemeSingleColorQuery.EXTRALIGHT, ColorSchemeSingleColorQuery.LIGHT, ColorSchemeSingleColorQuery.MID, ColorSchemeSingleColorQuery.LIGHT,
+                ColorSchemeSingleColorQuery.ULTRALIGHT });
 
-		this.decorationPainter = new MatteDecorationPainter();
-		this.highlightPainter = new ClassicHighlightPainter();
+        this.decorationPainter = new MatteDecorationPainter();
+        this.highlightPainter = new ClassicHighlightPainter();
 
-		this.borderPainter = new FractionBasedBorderPainter("Next",
-				new float[] { 0.0f, 0.5f, 1.0f },
-				new ColorSchemeSingleColorQuery[] {
-						ColorSchemeSingleColorQuery.MID,
-						ColorSchemeSingleColorQuery.DARK,
-						ColorSchemeSingleColorQuery.ULTRADARK });
-		this.highlightBorderPainter = new ClassicBorderPainter();
-	}
+        this.borderPainter = new FractionBasedBorderPainter("Next", new float[] { 0.0f, 0.5f, 1.0f }, new ColorSchemeSingleColorQuery[] { ColorSchemeSingleColorQuery.MID, ColorSchemeSingleColorQuery.DARK, ColorSchemeSingleColorQuery.ULTRADARK });
+        this.highlightBorderPainter = new ClassicBorderPainter();
+    }
 
-	public String getDisplayName() {
-		return NAME;
-	}
+    public String getDisplayName() {
+        return NAME;
+    }
 }

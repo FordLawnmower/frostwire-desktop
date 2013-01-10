@@ -15,7 +15,6 @@
 
 package com.limegroup.gnutella.gui;
 
-import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -40,6 +39,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.WindowConstants;
+
+import net.miginfocom.swing.MigLayout;
 
 import org.limewire.setting.SettingsGroupManager;
 import org.limewire.util.OSUtils;
@@ -162,13 +163,6 @@ public final class MainFrame implements RefreshListener, ThemeObserver {
         //com.frostwire.gui.updates.UpdateManager.scheduleUpdateCheckTask(0,"http://update1.frostwire.com/example.php");
 
         FRAME = frame;
-        Dimension minFrameDimensions = null;
-        if (OSUtils.isMacOSX()) {
-            minFrameDimensions = new Dimension(875, 97);
-        } else {
-            minFrameDimensions = new Dimension(875, 134);
-        }
-        FRAME.setMinimumSize(minFrameDimensions);
         new DropTarget(FRAME, new TransferHandlerDropTargetListener(DNDUtils.DEFAULT_TRANSFER_HANDLER));
 
         TABBED_PANE = new JPanel(new CardLayout());
@@ -228,19 +222,17 @@ public final class MainFrame implements RefreshListener, ThemeObserver {
         JPanel contentPane = new JPanel();
 
         FRAME.setContentPane(contentPane);
-        contentPane.setLayout(new BorderLayout());
+        contentPane.setLayout(new MigLayout());
 
         buildTabs();
 
         APPLICATION_HEADER = new ApplicationHeader(TABS);
         LOGO_PANEL = APPLICATION_HEADER.getLogoPanel();
-        contentPane.add(APPLICATION_HEADER, BorderLayout.PAGE_START);
 
-        //ADD TABBED PANE
-        contentPane.add(TABBED_PANE, BorderLayout.CENTER);
-
-        //ADD STATUS LINE
-        contentPane.add(getStatusLine().getComponent(), BorderLayout.PAGE_END);
+        contentPane.add(APPLICATION_HEADER, "dock north");
+        contentPane.add(TABBED_PANE);
+        contentPane.add(getStatusLine().getComponent(), "dock south, shrink 0");
+        setMinimalSize(FRAME, TABBED_PANE, APPLICATION_HEADER, TABBED_PANE, getStatusLine().getComponent());
 
         ThemeMediator.addThemeObserver(this);
         GUIMediator.addRefreshListener(this);
@@ -252,10 +244,6 @@ public final class MainFrame implements RefreshListener, ThemeObserver {
         PowerManager pm = new PowerManager();
         FRAME.addWindowListener(pm);
         GUIMediator.addRefreshListener(pm);
-    }
-
-    public ApplicationHeader getApplicationHeader() {
-        return APPLICATION_HEADER;
     }
 
     /** Saves the state of the Window to settings. */
@@ -290,7 +278,7 @@ public final class MainFrame implements RefreshListener, ThemeObserver {
         //for(GUIMediator.Tabs tab : GUIMediator.Tabs.values())
         //  updateTabIcon(tab);
     }
-    
+
     /**
      * Build the Tab Structure based on advertising mode and Windows
      */
@@ -500,5 +488,24 @@ public final class MainFrame implements RefreshListener, ThemeObserver {
 
     public Tab getTab(Tabs tabs) {
         return TABS.get(tabs);
+    }
+
+    private void setMinimalSize(JFrame frame, JComponent horizontal, JComponent... verticals) {
+        int width = 0;
+        int height = 0;
+
+        width = horizontal.getMinimumSize().width;
+
+        for (JComponent c : verticals) {
+            height += c.getMinimumSize().height;
+        }
+
+        // for some reason I can pack the frame
+        // this disallow me of getting the right size of the title bar
+        // and in general the insets's frame
+        // lets add some fixed value for now
+        height += 50;
+
+        frame.setMinimumSize(new Dimension(width, height));
     }
 }

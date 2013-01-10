@@ -121,13 +121,13 @@ Next Header Background {
 
 Next Background {
     kind=Light
-    colorUltraLight=#FFFFFF
-    colorExtraLight=#FFFFFF
-    colorLight=#FFFFFF
-    colorMid=#FFFFFF
-    colorDark=#FFFFFF
-    colorUltraDark=#FFFFFF
-    colorForeground=#000000
+    colorUltraLight=#F6F6F6
+    colorExtraLight=#F6F6F6
+    colorLight=#F6F6F6
+    colorMid=#F6F6F6
+    colorDark=#F6F6F6
+    colorUltraDark=#F6F6F6
+    colorForeground=#F6F6F6
 }
 
 Next Active {
