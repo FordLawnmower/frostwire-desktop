@@ -45,6 +45,7 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
+import org.gudy.azureus2.core3.download.DownloadManager;
 import org.limewire.collection.CollectionUtils;
 import org.limewire.util.FileUtils;
 import org.limewire.util.FilenameUtils;
@@ -54,6 +55,7 @@ import org.pushingpixels.substance.api.renderers.SubstanceDefaultListCellRendere
 import com.frostwire.alexandria.Playlist;
 import com.frostwire.gui.Librarian;
 import com.frostwire.gui.bittorrent.CreateTorrentDialog;
+import com.frostwire.gui.bittorrent.TorrentUtil;
 import com.frostwire.gui.player.MediaPlayer;
 import com.frostwire.gui.player.MediaSource;
 import com.frostwire.gui.upnp.UPnPManager;
@@ -64,6 +66,7 @@ import com.limegroup.gnutella.gui.CheckBoxListPanel;
 import com.limegroup.gnutella.gui.GUIMediator;
 import com.limegroup.gnutella.gui.I18n;
 import com.limegroup.gnutella.gui.IconManager;
+import com.limegroup.gnutella.gui.MPlayerMediator;
 import com.limegroup.gnutella.gui.MessageService;
 import com.limegroup.gnutella.gui.MultiLineLabel;
 import com.limegroup.gnutella.gui.PaddedPanel;
@@ -559,12 +562,23 @@ final class LibraryFilesTableMediator extends AbstractLibraryTableMediator<Libra
         List<String> undeletedFileNames = new ArrayList<String>();
 
         for (File file : selected) {
-            // removeOptions > 2 => OS offers trash options
+            DownloadManager dm = null;
+            
+        	// stop seeding if seeding
+        	if ((dm = TorrentUtil.getDownloadManager(file)) != null) {
+        		dm.stopIt(DownloadManager.STATE_STOPPED, false, false);
+        	}
+        	
+        	// close media player if still playing
+        	if (MediaPlayer.instance().isThisBeingPlayed(file)) {
+                MediaPlayer.instance().stop();
+                MPlayerMediator.instance().showPlayerWindow(false);
+            }
+        	
+        	// removeOptions > 2 => OS offers trash options
             boolean removed = FileUtils.delete(file, removeOptions.length > 2 && option == 0 /* "move to trash" option index */);
             if (removed) {
-                if (MediaPlayer.instance().isThisBeingPlayed(file)) {
-                    MediaPlayer.instance().stop();
-                }
+                
                 DATA_MODEL.remove(DATA_MODEL.getRow(file));
             } else {
                 undeletedFileNames.add(getCompleteFileName(file));
