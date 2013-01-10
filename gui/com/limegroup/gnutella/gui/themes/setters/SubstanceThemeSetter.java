@@ -47,6 +47,7 @@ import org.pushingpixels.substance.internal.ui.SubstanceTreeUI;
 import org.pushingpixels.substance.internal.utils.SubstanceCoreUtilities;
 
 import com.frostwire.gui.components.RangeSlider;
+import com.frostwire.gui.themes.next.NextCustomUI;
 import com.limegroup.gnutella.gui.themes.SkinComboBoxUI;
 import com.limegroup.gnutella.gui.themes.SkinCustomUI;
 import com.limegroup.gnutella.gui.themes.SkinListUI;
@@ -137,6 +138,7 @@ public class SubstanceThemeSetter implements ThemeSetter {
     // from FrostWire
     public static final SubstanceThemeSetter SEA_GLASS = new SubstanceThemeSetter("Sea Glass", "com.limegroup.gnutella.gui.themes.SeaGlassSkin");
     public static final SubstanceThemeSetter FUELED = new SubstanceThemeSetter("Fueled", "com.limegroup.gnutella.gui.themes.fueled.FueledSkin", new FueledCustomUI());
+    public static final SubstanceThemeSetter NEXT = new SubstanceThemeSetter("Next", "com.frostwire.gui.themes.next.NextSkin", new NextCustomUI());
 
     // from Substance
     public static final SubstanceThemeSetter AUTUMN = new SubstanceThemeSetter("Autumn", "org.pushingpixels.substance.api.skin.AutumnSkin");

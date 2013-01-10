@@ -130,6 +130,7 @@ public class ThemeMediator {
         // from FrostWire
         themes.add(SubstanceThemeSetter.SEA_GLASS);
         themes.add(SubstanceThemeSetter.FUELED);
+        themes.add(SubstanceThemeSetter.NEXT);
         
         // from Substance
         themes.add(SubstanceThemeSetter.AUTUMN);
@@ -168,7 +169,7 @@ public class ThemeMediator {
 //        themes.add(SubstanceThemeSetter.MANGO);
 //        themes.add(SubstanceThemeSetter.STREETLIGHTS);
         
-        DEFAULT_THEME = SubstanceThemeSetter.FUELED;
+        DEFAULT_THEME = SubstanceThemeSetter.NEXT;
         THEMES = themes;
         CURRENT_THEME = loadCurrentTheme();
         
