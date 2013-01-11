@@ -240,10 +240,6 @@ public final class MainFrame implements ThemeObserver {
         if (ApplicationSettings.MAGNET_CLIPBOARD_LISTENER.getValue()) {
             FRAME.addWindowListener(MagnetClipboardListener.getInstance());
         }
-
-        PowerManager pm = new PowerManager();
-        FRAME.addWindowListener(pm);
-        GUIMediator.addRefreshListener(pm);
     }
 
     /** Saves the state of the Window to settings. */
