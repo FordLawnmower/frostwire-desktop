@@ -183,6 +183,7 @@ public final class MediaPlayerComponent implements MediaPlayerListener, RefreshL
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 1));
         buttonPanel.setOpaque(false);
 
+        tempHeight = 80;
         buttonPanel.setMinimumSize(new Dimension(300, tempHeight));
         buttonPanel.setPreferredSize(new Dimension(300, tempHeight));
         buttonPanel.setMaximumSize(new Dimension(300, tempHeight));

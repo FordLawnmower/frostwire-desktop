@@ -51,7 +51,6 @@ import org.pushingpixels.trident.Timeline;
 import org.pushingpixels.trident.Timeline.TimelineState;
 import org.pushingpixels.trident.callback.TimelineCallbackAdapter;
 
-import com.frostwire.gui.player.MediaPlayerComponent;
 import com.frostwire.gui.tabs.Tab;
 import com.frostwire.gui.updates.UpdateMediator;
 import com.limegroup.gnutella.gui.GUIMediator.Tabs;
@@ -119,7 +118,6 @@ public class ApplicationHeader extends JPanel implements ThemeObserver, RefreshL
 
         addEastPanel();
         addUpdateButton();
-        addAudioPlayerComponent();
 
         GUIMediator.addRefreshListener(this);
 
@@ -135,31 +133,6 @@ public class ApplicationHeader extends JPanel implements ThemeObserver, RefreshL
         setMinimumSize(new Dimension(1, 54));
         setPreferredSize(new Dimension(Integer.MAX_VALUE, 54));
         setMaximumSize(new Dimension(Integer.MAX_VALUE, 54));
-    }
-
-    private void addAudioPlayerComponent() {
-        final JPanel mediaPanel = new MediaPlayerComponent().getMediaPanel(true);
-        mediaPanel.setMinimumSize(new Dimension(300, 45));
-        mediaPanel.setPreferredSize(new Dimension(300, 45));
-
-        mediaPanel.setBorder(BorderFactory.createEmptyBorder(2, 1, 6, 11));
-
-        final Image audioPlayerBackground = GUIMediator.getThemeImage("audio_player_background").getImage();
-
-        @SuppressWarnings("serial")
-        final JPanel mediaPanelFrame = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                g.drawImage(audioPlayerBackground, 0, (getHeight() - mediaPanel.getHeight()) / 2, null);
-                super.paintComponent(g);
-            }
-        };
-
-        //mediaPanelFrame.setBorder(BorderFactory.createEmptyBorder(4,1,6,11));
-        mediaPanelFrame.setOpaque(false);
-        mediaPanelFrame.add(mediaPanel);
-
-        eastPanel.add(mediaPanelFrame);
     }
 
     private void addUpdateButton() {

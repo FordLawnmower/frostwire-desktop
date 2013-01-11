@@ -48,6 +48,7 @@ import org.limewire.util.OSUtils;
 import com.frostwire.gui.ChatMediator;
 import com.frostwire.gui.bittorrent.BTDownloadMediator;
 import com.frostwire.gui.library.LibraryMediator;
+import com.frostwire.gui.player.MediaPlayerComponent;
 import com.frostwire.gui.tabs.ChatTab;
 import com.frostwire.gui.tabs.LibraryTab;
 import com.frostwire.gui.tabs.SearchDownloadTab;
@@ -228,9 +229,12 @@ public final class MainFrame implements ThemeObserver {
 
         APPLICATION_HEADER = new ApplicationHeader(TABS);
         LOGO_PANEL = APPLICATION_HEADER.getLogoPanel();
+        
+        JComponent player = new MediaPlayerComponent().getMediaPanel(true);
 
         contentPane.add(APPLICATION_HEADER, "dock north");
-        contentPane.add(TABBED_PANE);
+        contentPane.add(TABBED_PANE, "wrap");
+        contentPane.add(player);
         contentPane.add(getStatusLine().getComponent(), "dock south, shrink 0");
 
         setMinimalSize(FRAME, TABBED_PANE, APPLICATION_HEADER, TABBED_PANE, getStatusLine().getComponent());
