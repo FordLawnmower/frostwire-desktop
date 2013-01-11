@@ -232,7 +232,7 @@ public final class MainFrame implements ThemeObserver {
         
         JComponent player = new MediaPlayerComponent().getMediaPanel(true);
 
-        contentPane.add(APPLICATION_HEADER, "dock north");
+        contentPane.add(APPLICATION_HEADER, "growx, dock north");
         contentPane.add(TABBED_PANE, "wrap");
         contentPane.add(player, "growx");
         contentPane.add(getStatusLine().getComponent(), "dock south, shrink 0");

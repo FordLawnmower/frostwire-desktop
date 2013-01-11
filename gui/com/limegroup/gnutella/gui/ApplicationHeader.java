@@ -103,13 +103,10 @@ public final class ApplicationHeader extends JPanel implements ThemeObserver, Re
     private ImageIcon updateImageButtonOn;
     private ImageIcon updateImageButtonOff;
 
-    /** Contains the Update Button and the Player */
-    private JPanel eastPanel;
-
     public ApplicationHeader(Map<Tabs, Tab> tabs) {
         putClientProperty(SkinCustomUI.CLIENT_PROPERTY_GRADIENT_BACKGROUND, ThemeMediator.CURRENT_THEME.getCustomUI().getAppHeaderBackground());
         setMinimumSize(new Dimension(300, 54));
-        setLayout(new MigLayout());
+        setLayout(new MigLayout("", "[][][grow][]"));
 
         headerButtonBackgroundSelected = GUIMediator.getThemeImage("selected_header_button_background").getImage();
         headerButtonBackgroundUnselected = GUIMediator.getThemeImage("unselected_header_button_background").getImage();
@@ -118,17 +115,18 @@ public final class ApplicationHeader extends JPanel implements ThemeObserver, Re
         add(searchInput);
 
         addTabButtons(tabs);
-        add(logoPanel = new LogoPanel());
+        
 
-        eastPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
-        add(eastPanel);
-
-        addUpdateButton();
+        createUpdateButton();
+        add(updateButton, "growx");
+        
+        logoPanel = new LogoPanel();
+        add(logoPanel, "dock east");
 
         GUIMediator.addRefreshListener(this);
     }
 
-    private void addUpdateButton() {
+    private void createUpdateButton() {
         updateImageButtonOn = GUIMediator.getThemeImage("update_button_on");
         updateImageButtonOff = GUIMediator.getThemeImage("update_button_off");
 
@@ -150,8 +148,6 @@ public final class ApplicationHeader extends JPanel implements ThemeObserver, Re
                 UpdateMediator.instance().showUpdateMessage();
             }
         });
-
-        eastPanel.add(updateButton);
     }
 
     public LogoPanel getLogoPanel() {
@@ -189,7 +185,7 @@ public final class ApplicationHeader extends JPanel implements ThemeObserver, Re
             button.setSelected(t.equals(GUIMediator.Tabs.SEARCH));
         }
 
-        add(buttonContainer);
+        add(buttonContainer, "");
     }
 
     /** Given a Tab mark that button as selected 
