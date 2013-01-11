@@ -26,6 +26,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
 
@@ -54,7 +55,7 @@ class SearchInputPanel extends JPanel {
      * 
      */
     private static final long serialVersionUID = -5638062215253666235L;
-    
+
     private final SchemaBox SCHEMA_BOX = new SchemaBox();
 
     /**
@@ -78,17 +79,15 @@ class SearchInputPanel extends JPanel {
      */
     private final ActionListener SEARCH_LISTENER = new SearchListener();
 
-	private JXCollapsiblePane SEARCH_OPTIONS_COLLAPSIBLE_PANEL;
-	
-	private SearchFilterPanel _filterPanel;
-	
+    private SearchFilterPanel _filterPanel;
+
     SearchInputPanel() {
         final ActionListener schemaListener = new SchemaListener();
 
         SEARCH_FIELD.addActionListener(SEARCH_LISTENER);
-        
+
         createDefaultSearchPanel();
-        
+
         setBorder(BorderFactory.createEmptyBorder(0, 3, 5, 2));
 
         schemaListener.actionPerformed(null);
@@ -117,167 +116,132 @@ class SearchInputPanel extends JPanel {
     }
 
     /**
-     * Sets all components in this component to be not opaque
-     * and sets the correct background panel.
-     */
-    /**
-    private void panelize(JComponent c) {
-        GUIUtils.setOpaque(false, c);
-        if (!ThemeSettings.isNativeTheme()) {
-            c.setOpaque(true);
-        }
-
-        c.setBorder(BorderFactory.createEmptyBorder(0, 3, 5, 0));
-    }
-    */
-
-    /**
      * Creates the default search input of:
      *    Filename
      *    [   input box  ]
      */
     private void createDefaultSearchPanel() {
-        setLayout(new BoxLayout(this, BoxPanel.Y_AXIS));        
-        add(SCHEMA_BOX);
-        add(Box.createVerticalStrut(3));
-        SEARCH_FIELD.setPrompt(I18n.tr("Search or enter URL"));
-        SEARCH_FIELD.setMinimumSize(new Dimension(100, 27));
-        add(SEARCH_FIELD);
-        add(Box.createVerticalStrut(5));
-        add(createSearchButtonPanel());
-        JXCollapsiblePane cp = createSearchOptionsPanel();
+        setLayout(new BoxLayout(this, BoxPanel.Y_AXIS));
+
+        JLabel filterLabel = new JLabel(I18n.tr("Refine Results"));
+        filterLabel.setMinimumSize(new Dimension(200, 30));
+        add(filterLabel);
+
+        JPanel cp = createSearchOptionsPanel();
         JPanel p = new JPanel(new BorderLayout());
         p.add(cp, BorderLayout.PAGE_START);
-        JScrollPane sp = new JScrollPane(p);
+        JScrollPane sp = new JScrollPane(p, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         sp.setBorder(BorderFactory.createEmptyBorder());
-        Dimension d = new Dimension(100, 70000);
-        sp.setPreferredSize(d);
+
         add(sp);
-        
-        Font origFont = SEARCH_FIELD.getFont();
-        Font newFont = origFont.deriveFont(origFont.getSize2D() + 2f);
-        SEARCH_FIELD.setFont(newFont);
     }
-    
-    private JXCollapsiblePane createSearchOptionsPanel() {
-		SEARCH_OPTIONS_COLLAPSIBLE_PANEL = new JXCollapsiblePane();
-		SEARCH_OPTIONS_COLLAPSIBLE_PANEL.setCollapsed(ApplicationSettings.SEARCH_OPTIONS_COLLAPSED.getValue());
-		SEARCH_OPTIONS_COLLAPSIBLE_PANEL.setLayout(new BorderLayout());
-		SEARCH_OPTIONS_COLLAPSIBLE_PANEL.setAnimated(true);
-		
-		JPanel p = new JPanel();
-		p.setLayout(new BoxLayout(p, BoxLayout.PAGE_AXIS));
-		p.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
-		
-		JPanel controls = new JPanel();
-		controls.putClientProperty(SkinCustomUI.CLIENT_PROPERTY_DARK_DARK_NOISE, true);
-		controls.setBorder(ThemeMediator.CURRENT_THEME.getCustomUI().createTitledBorder(I18n.tr("Search Engines")));
+
+    private JPanel createSearchOptionsPanel() {
+        JPanel p = new JPanel();
+        p.setLayout(new BoxLayout(p, BoxLayout.PAGE_AXIS));
+        p.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+
+        JPanel controls = new JPanel();
+        controls.putClientProperty(SkinCustomUI.CLIENT_PROPERTY_DARK_DARK_NOISE, true);
+        controls.setBorder(ThemeMediator.CURRENT_THEME.getCustomUI().createTitledBorder(I18n.tr("Search Engines")));
         controls.setLayout(new GridBagLayout());
         controls.setAlignmentX(0.0f);
         List<SearchEngine> searchEngines = SearchEngine.getSearchEngines();
         setupCheckboxes(searchEngines, controls);
         p.add(controls);
-       
+
         p.add(Box.createVerticalStrut(15));
 
         _filterPanel = new SearchFilterPanel();
-		_filterPanel.putClientProperty(SkinCustomUI.CLIENT_PROPERTY_DARK_DARK_NOISE, true);
-		_filterPanel.setBorder(ThemeMediator.CURRENT_THEME.getCustomUI().createTitledBorder(I18n.tr("Filter")));
-		_filterPanel.setAlignmentX(0.0f);
-		p.add(_filterPanel);
-		
-		//JScrollPane sp = new JScrollPane(p); //pending work
-		SEARCH_OPTIONS_COLLAPSIBLE_PANEL.add(p);
+        _filterPanel.putClientProperty(SkinCustomUI.CLIENT_PROPERTY_DARK_DARK_NOISE, true);
+        _filterPanel.setBorder(ThemeMediator.CURRENT_THEME.getCustomUI().createTitledBorder(I18n.tr("Filter")));
+        _filterPanel.setAlignmentX(0.0f);
+        p.add(_filterPanel);
 
-		return SEARCH_OPTIONS_COLLAPSIBLE_PANEL;
-	}
-    
+        return p;
+    }
+
     private void setupCheckboxes(List<SearchEngine> searchEngines, JPanel parent) {
-    	
-    	final Map<JCheckBox,BooleanSetting> cBoxes = new HashMap<JCheckBox,BooleanSetting>();
-    	
-		ItemListener listener = new ItemListener() {
+
+        final Map<JCheckBox, BooleanSetting> cBoxes = new HashMap<JCheckBox, BooleanSetting>();
+
+        ItemListener listener = new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
-            	boolean allDeSelected = true;
+                boolean allDeSelected = true;
 
-            	for (JCheckBox cBox : cBoxes.keySet()) {
-            		if (cBox.isSelected()) {
-            			allDeSelected = false;
-            			break;
-            		}
-            	}
+                for (JCheckBox cBox : cBoxes.keySet()) {
+                    if (cBox.isSelected()) {
+                        allDeSelected = false;
+                        break;
+                    }
+                }
 
-            	if (allDeSelected) {
-            		((JCheckBox)e.getItemSelectable()).setSelected(true);
-            	}
-                
-            	for (JCheckBox cBox : cBoxes.keySet()) {
-            		cBoxes.get(cBox).setValue(cBox.isSelected());
-            	}
-                
+                if (allDeSelected) {
+                    ((JCheckBox) e.getItemSelectable()).setSelected(true);
+                }
+
+                for (JCheckBox cBox : cBoxes.keySet()) {
+                    cBoxes.get(cBox).setValue(cBox.isSelected());
+                }
+
                 updateSearchResults(new SearchEngineFilter());
             }
         };
 
-		for (SearchEngine se : searchEngines) {
-			JCheckBox cBox = new JCheckBox(se.getName());
-			cBox.setSelected(se.isEnabled());
-			
-			GridBagConstraints c = new GridBagConstraints();
-	        c.fill = GridBagConstraints.HORIZONTAL;
-	        c.weightx = 1.0;
-	        c.gridwidth = GridBagConstraints.REMAINDER;
-	        c.insets = new Insets(0, 10, 2, 10);
-			parent.add(cBox, c);
-			
-			cBoxes.put(cBox,se.getEnabledSetting());
-			cBox.addItemListener(listener);
-		}
+        for (SearchEngine se : searchEngines) {
+            JCheckBox cBox = new JCheckBox(se.getName());
+            cBox.setSelected(se.isEnabled());
 
-	}
+            GridBagConstraints c = new GridBagConstraints();
+            c.fill = GridBagConstraints.HORIZONTAL;
+            c.weightx = 1.0;
+            c.gridwidth = GridBagConstraints.REMAINDER;
+            c.insets = new Insets(0, 10, 2, 10);
+            parent.add(cBox, c);
 
-	private void updateSearchResults(TableLineFilter<SearchResultDataLine> filter) {
+            cBoxes.put(cBox, se.getEnabledSetting());
+            cBox.addItemListener(listener);
+        }
+
+    }
+
+    private void updateSearchResults(TableLineFilter<SearchResultDataLine> filter) {
         List<SearchResultMediator> resultPanels = SearchMediator.getSearchResultDisplayer().getResultPanels();
         for (SearchResultMediator resultPanel : resultPanels) {
             resultPanel.filterChanged(filter, 0);
         }
     }
 
-	/**
+    /**
      * Creates the search button & inserts it in a panel.
      */
     private JPanel createSearchButtonPanel() {
 
-    	//The Search Button on a row of it's own
+        //The Search Button on a row of it's own
         JPanel b = new JPanel(new GridBagLayout());
-       
-        
-        
+
         GridBagConstraints c = new GridBagConstraints();
         c.anchor = GridBagConstraints.LINE_START;
         c.fill = GridBagConstraints.NONE;
         c.gridx = 0;
         c.gridy = 0;
-        c.insets = new Insets(0,10,10,0);
-        
+        c.insets = new Insets(0, 10, 10, 0);
+
         /*JButton searchButton = new JButton(I18n.tr("Search"));
         searchButton.setToolTipText(I18n.tr("Search the Network for the Given Words"));
         searchButton.addActionListener(SEARCH_LISTENER);
         b.add(searchButton,c);*/
 
-        //Apply Filters <Icon Button>
-        final ToggleSearchOptionsPanelAction toggleSearchOptionsPanelAction = new ToggleSearchOptionsPanelAction();
-        
         JPanel filterLabelIconPanel = new JPanel(new GridBagLayout());
         c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 0;
         c.anchor = GridBagConstraints.WEST;
         c.fill = GridBagConstraints.NONE;
-        c.insets = new Insets(0,10,0,0);
+        c.insets = new Insets(0, 10, 0, 0);
         JLabel filterLabel = new JLabel(I18n.tr("<html><strong>Refine Results</strong></html>"));
         //filterLabel.setBorder(BorderFactory.createLineBorder(Color.black));
-        filterLabelIconPanel.add(filterLabel,c);
+        filterLabelIconPanel.add(filterLabel, c);
 
         c = new GridBagConstraints();
         c.gridx = 1;
@@ -285,44 +249,19 @@ class SearchInputPanel extends JPanel {
         c.fill = GridBagConstraints.HORIZONTAL;
         c.anchor = GridBagConstraints.WEST;
         c.weightx = 1.0;
-        c.insets = new Insets(0,3,0,0);
+        c.insets = new Insets(0, 3, 0, 0);
 
-        final JButton iconButton = new JButton();
-        iconButton.setAction(toggleSearchOptionsPanelAction);
-        iconButton.setIcon((ApplicationSettings.SEARCH_OPTIONS_COLLAPSED.getValue()) ? IconManager.instance().getSmallIconForButton("SEARCH_OPTIONS_MORE") : IconManager.instance().getSmallIconForButton("SEARCH_OPTIONS_LESS"));
-        fixIconButton(iconButton);        
-       
-        filterLabelIconPanel.add(iconButton,c);
-
-        filterLabel.addMouseListener(new MouseAdapter() {
-        	@Override
-        	public void mouseClicked(MouseEvent e) {
-        		ActionEvent evt = new ActionEvent(iconButton,1,null);
-        		
-        		toggleSearchOptionsPanelAction.actionPerformed(evt);
-        	}
-		});
-        
         c = new GridBagConstraints();
         c.anchor = GridBagConstraints.WEST;
         c.fill = GridBagConstraints.NONE;
         c.gridy = 0;
         c.gridy = 1;
         c.weightx = 1.0;
-        c.insets = new Insets(10,0,10,0);
-        b.add(filterLabelIconPanel,c);
+        c.insets = new Insets(10, 0, 10, 0);
+        b.add(filterLabelIconPanel, c);
 
         return b;
     }
-
-	private void fixIconButton(JButton iconButton) {
-		iconButton.setBorderPainted(false);
-        iconButton.setFocusable(false);
-        iconButton.setBorder(null);
-        iconButton.setFocusPainted(false);
-        iconButton.setContentAreaFilled(false);
-        iconButton.setPreferredSize(new Dimension(16,16));
-	}
 
     /**
      * Listener for selecting a new schema.
@@ -349,21 +288,21 @@ class SearchInputPanel extends JPanel {
     private class SearchListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             String query = SEARCH_FIELD.getText();
-            
+
             //start a download from the search box by entering a URL.
             if (FileMenuActions.openMagnetOrTorrent(query)) {
                 SEARCH_FIELD.setText("");
                 SEARCH_FIELD.hidePopup();
                 return;
             }
-            
+
             final SearchInformation info = SearchInformation.createTitledKeywordSearch(query, null, MediaType.getTorrentMediaType(), query);
 
             // If the search worked, store & clear it.
             if (SearchMediator.triggerSearch(info) != null) {
                 if (info.isKeywordSearch()) {
-                    
-                        SEARCH_FIELD.addToDictionary();
+
+                    SEARCH_FIELD.addToDictionary();
 
                     // Clear the existing search.
                     SEARCH_FIELD.setText("");
@@ -371,41 +310,6 @@ class SearchInputPanel extends JPanel {
                 }
             }
         }
-    }
-    
-    private class ToggleSearchOptionsPanelAction extends AbstractAction {
-
-    	private final String TOOLTIP_COLLAPSED = I18n.tr("Show search result filter controls");
-    	private final String TOOLTIP_SHOWN = I18n.tr("Hide search result filter controls");
-    	
-    	private static final long serialVersionUID = -2415729526575357348L;
-        
-        public ToggleSearchOptionsPanelAction() {
-        	putValue(SHORT_DESCRIPTION, TOOLTIP_COLLAPSED);
-		}
-
-        @Override
-		public void actionPerformed(ActionEvent event) {
-			SEARCH_OPTIONS_COLLAPSIBLE_PANEL.getActionMap().get(JXCollapsiblePane.TOGGLE_ACTION).actionPerformed(event);
-			
-			JButton iconButton = (JButton) event.getSource();
-			
-			Icon iconForButton = null;
-			
-			if (!SEARCH_OPTIONS_COLLAPSIBLE_PANEL.isCollapsed()) {
-				iconForButton = IconManager.instance().getSmallIconForButton("SEARCH_OPTIONS_LESS");
-				ApplicationSettings.SEARCH_OPTIONS_COLLAPSED.setValue(false);
-				putValue(SHORT_DESCRIPTION, TOOLTIP_SHOWN);
-			} else {
-				iconForButton = IconManager.instance().getSmallIconForButton("SEARCH_OPTIONS_MORE");
-				ApplicationSettings.SEARCH_OPTIONS_COLLAPSED.setValue(true);
-				putValue(SHORT_DESCRIPTION, TOOLTIP_COLLAPSED);
-			}
-
-			iconButton.setIcon(iconForButton);
-			fixIconButton(iconButton);
-		}
-    	
     }
 
     public void clearFilters() {
@@ -416,7 +320,7 @@ class SearchInputPanel extends JPanel {
         _filterPanel.setFilterFor(rp);
         SCHEMA_BOX.setFilterFor(rp);
     }
-    
+
     /**
      * Resets the FilterPanel for the specified ResultPanel.
      */
@@ -424,7 +328,7 @@ class SearchInputPanel extends JPanel {
         _filterPanel.panelReset(rp);
         SCHEMA_BOX.panelReset(rp);
     }
-    
+
     /**
      * Removes the filter associated with the specified result panel.
      */

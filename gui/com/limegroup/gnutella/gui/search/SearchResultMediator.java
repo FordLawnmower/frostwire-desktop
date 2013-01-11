@@ -499,7 +499,7 @@ public class SearchResultMediator extends AbstractTableMediator<TableRowFiltered
      * anymore.  Thus, it is necessary to store all visible rows and move to
      * the first still-visible one.
      */
-    boolean filterChanged(TableLineFilter<SearchResultDataLine> filter, int depth) {
+    public boolean filterChanged(TableLineFilter<SearchResultDataLine> filter, int depth) {
         FILTER.setFilter(depth, filter);
         //if(!FILTER.setFilter(depth, filter))
         //    return false;

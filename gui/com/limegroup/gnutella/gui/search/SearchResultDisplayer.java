@@ -450,7 +450,7 @@ public final class SearchResultDisplayer implements ThemeObserver, RefreshListen
         return entries.get(index);
     }
 
-    List<SearchResultMediator> getResultPanels() {
+    public List<SearchResultMediator> getResultPanels() {
         return new ArrayList<SearchResultMediator>(entries);
     }
 

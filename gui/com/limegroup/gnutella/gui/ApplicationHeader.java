@@ -18,7 +18,6 @@
 
 package com.limegroup.gnutella.gui;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -47,16 +46,12 @@ import javax.swing.JRadioButton;
 
 import net.miginfocom.swing.MigLayout;
 
-import org.pushingpixels.flamingo.api.common.JCommandButton;
-import org.pushingpixels.flamingo.api.common.JCommandMenuButton;
-import org.pushingpixels.flamingo.api.common.popup.JCommandPopupMenu;
-import org.pushingpixels.flamingo.api.common.popup.JPopupPanel;
-import org.pushingpixels.flamingo.api.common.popup.PopupPanelCallback;
 import org.pushingpixels.substance.internal.utils.SubstanceTextUtilities;
 import org.pushingpixels.trident.Timeline;
 import org.pushingpixels.trident.Timeline.TimelineState;
 import org.pushingpixels.trident.callback.TimelineCallbackAdapter;
 
+import com.frostwire.gui.search.GeneralSearchInput;
 import com.frostwire.gui.tabs.Tab;
 import com.frostwire.gui.updates.UpdateMediator;
 import com.limegroup.gnutella.gui.GUIMediator.Tabs;
@@ -99,6 +94,8 @@ public final class ApplicationHeader extends JPanel implements ThemeObserver, Re
 
     /** Button background for unselected button */
     private final Image headerButtonBackgroundUnselected;
+    
+    private GeneralSearchInput searchInput;
 
     private LogoPanel logoPanel;
 
@@ -117,25 +114,8 @@ public final class ApplicationHeader extends JPanel implements ThemeObserver, Re
         headerButtonBackgroundSelected = GUIMediator.getThemeImage("selected_header_button_background").getImage();
         headerButtonBackgroundUnselected = GUIMediator.getThemeImage("unselected_header_button_background").getImage();
 
-        JCommandButton button1 = new JCommandButton("Type");
-        button1.setPopupCallback(new PopupPanelCallback() {
-
-            @Override
-            public JPopupPanel getPopupPanel(JCommandButton commandButton) {
-                JCommandPopupMenu menu = new JCommandPopupMenu();
-                menu.addMenuButton(new JCommandMenuButton("Audio", null));
-                menu.addMenuButton(new JCommandMenuButton("Video", null));
-                menu.addMenuButton(new JCommandMenuButton("Pictures", null));
-                menu.addMenuButton(new JCommandMenuButton("Programs", null));
-                menu.addMenuButton(new JCommandMenuButton("Documents", null));
-                menu.addMenuButton(new JCommandMenuButton("Torrents", null));
-                return menu;
-            }
-        });
-        button1.setCommandButtonKind(JCommandButton.CommandButtonKind.POPUP_ONLY);
-        button1.putClientProperty(SubstanceTextUtilities.ENFORCE_FG_COLOR, true);
-        button1.setForeground(Color.WHITE);
-        add(button1);
+        searchInput = new GeneralSearchInput();
+        add(searchInput);
 
         addTabButtons(tabs);
         add(logoPanel = new LogoPanel());
