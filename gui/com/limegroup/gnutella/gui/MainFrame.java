@@ -234,10 +234,10 @@ public final class MainFrame implements ThemeObserver {
 
         contentPane.add(APPLICATION_HEADER, "dock north");
         contentPane.add(TABBED_PANE, "wrap");
-        contentPane.add(player);
+        contentPane.add(player, "growx");
         contentPane.add(getStatusLine().getComponent(), "dock south, shrink 0");
 
-        setMinimalSize(FRAME, TABBED_PANE, APPLICATION_HEADER, TABBED_PANE, getStatusLine().getComponent());
+        setMinimalSize(FRAME, getStatusLine().getComponent(), APPLICATION_HEADER, TABBED_PANE, player, getStatusLine().getComponent());
 
         ThemeMediator.addThemeObserver(this);
 

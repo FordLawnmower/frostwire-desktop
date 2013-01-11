@@ -19,7 +19,6 @@
 package com.limegroup.gnutella.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -55,7 +54,6 @@ import com.frostwire.gui.tabs.Tab;
 import com.frostwire.gui.updates.UpdateMediator;
 import com.limegroup.gnutella.gui.GUIMediator.Tabs;
 import com.limegroup.gnutella.gui.themes.SkinCustomUI;
-import com.limegroup.gnutella.gui.themes.SkinLinearGradient;
 import com.limegroup.gnutella.gui.themes.ThemeMediator;
 import com.limegroup.gnutella.gui.themes.ThemeObserver;
 
@@ -105,13 +103,12 @@ public class ApplicationHeader extends JPanel implements ThemeObserver, RefreshL
     private JPanel eastPanel;
 
     public ApplicationHeader(Map<Tabs, Tab> tabs) {
-        putClientProperty(SkinCustomUI.CLIENT_PROPERTY_GRADIENT_BACKGROUND, new SkinLinearGradient(Color.BLUE, Color.RED, false));
+        putClientProperty(SkinCustomUI.CLIENT_PROPERTY_GRADIENT_BACKGROUND, ThemeMediator.CURRENT_THEME.getCustomUI().getApplicationHeaderBackground());
+        setMinimumSize(new Dimension(300, 54));
         setLayout(new BorderLayout());
 
         headerButtonBackgroundSelected = GUIMediator.getThemeImage("selected_header_button_background").getImage();
         headerButtonBackgroundUnselected = GUIMediator.getThemeImage("unselected_header_button_background").getImage();
-
-        setSizes();
 
         addTabButtons(tabs);
         addLogoPanel();
@@ -128,13 +125,7 @@ public class ApplicationHeader extends JPanel implements ThemeObserver, RefreshL
         eastPanel.setOpaque(false);
         add(eastPanel, BorderLayout.LINE_END);
     }
-
-    private void setSizes() {
-        setMinimumSize(new Dimension(1, 54));
-        setPreferredSize(new Dimension(Integer.MAX_VALUE, 54));
-        setMaximumSize(new Dimension(Integer.MAX_VALUE, 54));
-    }
-
+    
     private void addUpdateButton() {
         updateImageButtonOn = GUIMediator.getThemeImage("update_button_on");
         updateImageButtonOff = GUIMediator.getThemeImage("update_button_off");
