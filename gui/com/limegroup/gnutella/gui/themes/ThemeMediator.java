@@ -1,3 +1,21 @@
+/*
+ * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
+ * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.limegroup.gnutella.gui.themes;
 
 import java.awt.Font;
@@ -27,6 +45,10 @@ import com.limegroup.gnutella.gui.themes.setters.SubstanceThemeSetter;
 
 /**
  * Class that mediates between themes and FrostWire.
+ * 
+ * @author gubatron
+ * @author aldenml
+ *
  */
 public class ThemeMediator {
     
@@ -237,6 +259,7 @@ public class ThemeMediator {
         UIManager.put("FileChooserUI", "com.limegroup.gnutella.gui.themes.SkinFileChooserUI");
         UIManager.put("TabbedPaneUI", "com.limegroup.gnutella.gui.themes.SkinTabbedPaneUI");
         UIManager.put("ProgressBarUI", "com.limegroup.gnutella.gui.themes.SkinProgressBarUI");
+        UIManager.put("PanelUI", "com.limegroup.gnutella.gui.themes.SkinPanelUI");
         
         UIManager.put("ComboBox.editorInsets", new InsetsUIResource(2, 2, 3, 2));
     }

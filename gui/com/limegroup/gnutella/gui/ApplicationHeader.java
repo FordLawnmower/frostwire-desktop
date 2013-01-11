@@ -1,6 +1,25 @@
+/*
+ * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
+ * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.limegroup.gnutella.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -36,93 +55,80 @@ import com.frostwire.gui.player.MediaPlayerComponent;
 import com.frostwire.gui.tabs.Tab;
 import com.frostwire.gui.updates.UpdateMediator;
 import com.limegroup.gnutella.gui.GUIMediator.Tabs;
+import com.limegroup.gnutella.gui.themes.SkinCustomUI;
+import com.limegroup.gnutella.gui.themes.SkinLinearGradient;
 import com.limegroup.gnutella.gui.themes.ThemeMediator;
 import com.limegroup.gnutella.gui.themes.ThemeObserver;
 
+/**
+ * 
+ * @author gubatron
+ * @author aldenml
+ *
+ */
 public class ApplicationHeader extends JPanel implements ThemeObserver, RefreshListener {
 
     /*
     * The property to store the selected icon in.
     */
     private static final String SELECTED = "SELECTED_ICON";
-    
+
     /**
      * The property to store the unselected icon in.
      */
     private static final String DESELECTED = "DESELECTED_ICON";
-    
+
     /**
      * The clicker forwarder.
      */
     private final MouseListener CLICK_FORWARDER = new Clicker();
-    
 
-    
     /**
      * The listener for changing the highlighting of buttons.
      */
     private final ItemListener HIGHLIGHTER = new Highlighter();
 
-
     private static final long serialVersionUID = 4800214468508213106L;
-
-    /** image used for the background */
-    private Image tile;
 
     /** Button background for selected button */
     private final Image headerButtonBackgroundSelected;
-    
+
     /** Button background for unselected button */
     private final Image headerButtonBackgroundUnselected;
-    
+
     private LogoPanel logoPanel;
-    
+
     private JLabel updateButton;
     private ImageIcon updateImageButtonOn;
     private ImageIcon updateImageButtonOff;
-    
+
     /** Contains the Update Button and the Player */
     private JPanel eastPanel;
 
     public ApplicationHeader(Map<Tabs, Tab> tabs) {
+        putClientProperty(SkinCustomUI.CLIENT_PROPERTY_GRADIENT_BACKGROUND, new SkinLinearGradient(Color.BLUE, Color.RED, false));
         setLayout(new BorderLayout());
-        
-        tile = GUIMediator.getThemeImage("application_header_background").getImage();
-        
+
         headerButtonBackgroundSelected = GUIMediator.getThemeImage("selected_header_button_background").getImage();
         headerButtonBackgroundUnselected = GUIMediator.getThemeImage("unselected_header_button_background").getImage();
-        
+
         setSizes();
-        initBackground();
 
         addTabButtons(tabs);
         addLogoPanel();
-        
+
         addEastPanel();
         addUpdateButton();
         addAudioPlayerComponent();
-        
+
         GUIMediator.addRefreshListener(this);
-        
 
     }
 
     private void addEastPanel() {
-        eastPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,10,0));
+        eastPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
         eastPanel.setOpaque(false);
         add(eastPanel, BorderLayout.LINE_END);
-    }
-
-    private void initBackground() {
-
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        //paint tiled background
-        for (int i = 0; i < getWidth(); i+=16) {
-            g.drawImage(tile,i,0,null);
-        }
     }
 
     private void setSizes() {
@@ -133,37 +139,37 @@ public class ApplicationHeader extends JPanel implements ThemeObserver, RefreshL
 
     private void addAudioPlayerComponent() {
         final JPanel mediaPanel = new MediaPlayerComponent().getMediaPanel(true);
-        mediaPanel.setMinimumSize(new Dimension(300,45));
-        mediaPanel.setPreferredSize(new Dimension(300,45));
-        
-        mediaPanel.setBorder(BorderFactory.createEmptyBorder(2,1,6,11));
+        mediaPanel.setMinimumSize(new Dimension(300, 45));
+        mediaPanel.setPreferredSize(new Dimension(300, 45));
+
+        mediaPanel.setBorder(BorderFactory.createEmptyBorder(2, 1, 6, 11));
 
         final Image audioPlayerBackground = GUIMediator.getThemeImage("audio_player_background").getImage();
-        
+
         @SuppressWarnings("serial")
         final JPanel mediaPanelFrame = new JPanel() {
-           @Override
-           protected void paintComponent(Graphics g) {
-               g.drawImage(audioPlayerBackground, 0, (getHeight()-mediaPanel.getHeight())/2,null);
-               super.paintComponent(g);
-           }
+            @Override
+            protected void paintComponent(Graphics g) {
+                g.drawImage(audioPlayerBackground, 0, (getHeight() - mediaPanel.getHeight()) / 2, null);
+                super.paintComponent(g);
+            }
         };
-        
+
         //mediaPanelFrame.setBorder(BorderFactory.createEmptyBorder(4,1,6,11));
         mediaPanelFrame.setOpaque(false);
         mediaPanelFrame.add(mediaPanel);
-        
+
         eastPanel.add(mediaPanelFrame);
     }
 
     private void addUpdateButton() {
         updateImageButtonOn = GUIMediator.getThemeImage("update_button_on");
         updateImageButtonOff = GUIMediator.getThemeImage("update_button_off");
-        
+
         updateButton = new JLabel(updateImageButtonOn);
         updateButton.setToolTipText(I18n.tr("A new update has been downloaded."));
-        Dimension d = new Dimension(32,32);
-        
+        Dimension d = new Dimension(32, 32);
+
         updateButton.setVisible(false);
         updateButton.setSize(d);
         updateButton.setPreferredSize(d);
@@ -171,17 +177,17 @@ public class ApplicationHeader extends JPanel implements ThemeObserver, RefreshL
         updateButton.setMaximumSize(d);
         updateButton.setBorder(null);
         updateButton.setOpaque(false);
-        
+
         updateButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 UpdateMediator.instance().showUpdateMessage();
             }
         });
-        
+
         eastPanel.add(updateButton);
     }
-    
+
     private void addLogoPanel() {
         add(logoPanel = new LogoPanel(), BorderLayout.CENTER);
     }
@@ -194,13 +200,13 @@ public class ApplicationHeader extends JPanel implements ThemeObserver, RefreshL
 
         GridLayout gridLayout = new GridLayout(1, GUIMediator.Tabs.values().length);
         gridLayout.setHgap(8);
-        
+
         JPanel buttonContainer = new JPanel(gridLayout);
-        buttonContainer.setBorder(BorderFactory.createEmptyBorder(8,8,8,32));
+        buttonContainer.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 32));
         buttonContainer.setOpaque(false);
         ButtonGroup group = new ButtonGroup();
-        
-        Font buttonFont = new Font("Helvetica",Font.BOLD,14);
+
+        Font buttonFont = new Font("Helvetica", Font.BOLD, 14);
 
         for (Tabs t : GUIMediator.Tabs.values()) {
             final Tabs lameFinalT = t; //java...
@@ -217,13 +223,13 @@ public class ApplicationHeader extends JPanel implements ThemeObserver, RefreshL
 
             group.add(button);
             buttonContainer.add(button);
-            
+
             button.setSelected(t.equals(GUIMediator.Tabs.SEARCH));
         }
 
         add(buttonContainer, BorderLayout.LINE_START);
     }
-    
+
     /** Given a Tab mark that button as selected 
      * 
      * Since we don't keep explicit references to the buttons this method
@@ -245,7 +251,7 @@ public class ApplicationHeader extends JPanel implements ThemeObserver, RefreshL
             }
         }
     }
-    
+
     private AbstractButton createTabButton(Tab t) {
         Icon icon = t.getIcon();
         Icon disabledIcon = null;
@@ -262,7 +268,7 @@ public class ApplicationHeader extends JPanel implements ThemeObserver, RefreshL
                 super.paintComponent(g);
             }
         };
-        
+
         button.putClientProperty("tab", t);
 
         button.putClientProperty(SELECTED, icon);
@@ -275,91 +281,91 @@ public class ApplicationHeader extends JPanel implements ThemeObserver, RefreshL
         button.setRolloverIcon(rolloverIcon);
         button.addItemListener(HIGHLIGHTER);
         button.setBorderPainted(false);
-        button.setBorder(BorderFactory.createEmptyBorder(0, 7, 5 , 0));
+        button.setBorder(BorderFactory.createEmptyBorder(0, 7, 5, 0));
         button.setFocusPainted(false);
         button.setContentAreaFilled(false);
         button.setOpaque(false);
         button.addMouseListener(CLICK_FORWARDER);
         button.setToolTipText(t.getToolTip());
-        
+
         button.putClientProperty(SubstanceTextUtilities.ENFORCE_FG_COLOR, Boolean.TRUE);
         button.setForeground(ThemeMediator.CURRENT_THEME.getCustomUI().getTabButtonForegroundColor());
-        
-        Dimension buttonDim = new Dimension(107,34);
+
+        Dimension buttonDim = new Dimension(107, 34);
         button.setPreferredSize(buttonDim);
         button.setMinimumSize(buttonDim);
         button.setMaximumSize(buttonDim);
         button.setSelected(false);
-        
+
         return button;
     }
-    
+
     /*
     * Listener for ItemEvent, so that the buttons can be highlighted or not
     * when selected (or not).
     */
-   private static class Highlighter implements ItemListener {
-       public void itemStateChanged(ItemEvent e) {
-           AbstractButton button = (AbstractButton) e.getSource();
-           //DitherPanel parent = (DitherPanel) button.getParent();
-           if (e.getStateChange() == ItemEvent.SELECTED) {
-               button.setIcon((Icon) button.getClientProperty(SELECTED));
-               //parent.setDithering(true);
-           } else {
-               button.setIcon((Icon) button.getClientProperty(DESELECTED));
-               //parent.setDithering(false);
-           }
-       }
-   }
+    private static class Highlighter implements ItemListener {
+        public void itemStateChanged(ItemEvent e) {
+            AbstractButton button = (AbstractButton) e.getSource();
+            //DitherPanel parent = (DitherPanel) button.getParent();
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                button.setIcon((Icon) button.getClientProperty(SELECTED));
+                //parent.setDithering(true);
+            } else {
+                button.setIcon((Icon) button.getClientProperty(DESELECTED));
+                //parent.setDithering(false);
+            }
+        }
+    }
 
-   /**
-    * Forwards click events from a panel to the panel's component.
-    */
-   private static class Clicker implements MouseListener {
-       public void mouseEntered(MouseEvent e) {
-           /*
-           JComponent c = (JComponent) e.getSource();
-           AbstractButton b;
-           if (c instanceof AbstractButton) {
-               b = (AbstractButton) c;
-               c = (JComponent) c.getParent();
-           } else {
-               b = (AbstractButton) c.getComponent(0);
-           }
-//           if (!b.isSelected())
-//               setIfNotNull(c, "TabbedPane.selected");
-  */
-       }
+    /**
+     * Forwards click events from a panel to the panel's component.
+     */
+    private static class Clicker implements MouseListener {
+        public void mouseEntered(MouseEvent e) {
+            /*
+            JComponent c = (JComponent) e.getSource();
+            AbstractButton b;
+            if (c instanceof AbstractButton) {
+                b = (AbstractButton) c;
+                c = (JComponent) c.getParent();
+            } else {
+                b = (AbstractButton) c.getComponent(0);
+            }
+            //           if (!b.isSelected())
+            //               setIfNotNull(c, "TabbedPane.selected");
+            */
+        }
 
-       public void mouseExited(MouseEvent e) {
-           /**
-           JComponent c = (JComponent) e.getSource();
-           AbstractButton b;
-           if (c instanceof AbstractButton) {
-               b = (AbstractButton) c;
-               c = (JComponent) c.getParent();
-           } else {
-               b = (AbstractButton) c.getComponent(0);
-           }
-           */
-//           if (!b.isSelected())
-//               setIfNotNull(c, "TabbedPane.background");
-       }
+        public void mouseExited(MouseEvent e) {
+            /**
+            JComponent c = (JComponent) e.getSource();
+            AbstractButton b;
+            if (c instanceof AbstractButton) {
+                b = (AbstractButton) c;
+                c = (JComponent) c.getParent();
+            } else {
+                b = (AbstractButton) c.getComponent(0);
+            }
+            */
+            //           if (!b.isSelected())
+            //               setIfNotNull(c, "TabbedPane.background");
+        }
 
-       public void mouseClicked(MouseEvent e) {
-           JComponent c = (JComponent) e.getSource();
-           if (!(c instanceof AbstractButton)) {
-               AbstractButton b = (AbstractButton) c.getComponent(0);
-               b.doClick();
-           }
-       }
+        public void mouseClicked(MouseEvent e) {
+            JComponent c = (JComponent) e.getSource();
+            if (!(c instanceof AbstractButton)) {
+                AbstractButton b = (AbstractButton) c.getComponent(0);
+                b.doClick();
+            }
+        }
 
-       public void mousePressed(MouseEvent e) {
-       }
+        public void mousePressed(MouseEvent e) {
+        }
 
-       public void mouseReleased(MouseEvent e) {
-       }
-   }
+        public void mouseReleased(MouseEvent e) {
+        }
+    }
 
     @Override
     public void updateTheme() {
@@ -372,8 +378,7 @@ public class ApplicationHeader extends JPanel implements ThemeObserver, RefreshL
 
     @Override
     public void refresh() {
-        showUpdateButton(!UpdateMediator.instance().isUpdated() && 
-                         UpdateMediator.instance().isUpdateDownloaded());
+        showUpdateButton(!UpdateMediator.instance().isUpdated() && UpdateMediator.instance().isUpdateDownloaded());
     }
 
     public static class IntermittentButton {
@@ -387,7 +392,7 @@ public class ApplicationHeader extends JPanel implements ThemeObserver, RefreshL
             imgOn = on;
             imgOff = off;
         }
-        
+
         public void setImage(final boolean on) {
             GUIMediator.safeInvokeLater(new Runnable() {
                 @Override
@@ -397,42 +402,40 @@ public class ApplicationHeader extends JPanel implements ThemeObserver, RefreshL
             });
         }
     }
-    
+
     private void showUpdateButton(boolean show) {
         if (updateButton.isVisible() == show) {
             return;
         }
-        
+
         updateButton.setVisible(show);
-        
+
         if (show) {
             //Animate the button.
-            final Timeline timeline = new Timeline(new IntermittentButton(updateButton,updateImageButtonOn,updateImageButtonOff));
-            
+            final Timeline timeline = new Timeline(new IntermittentButton(updateButton, updateImageButtonOn, updateImageButtonOff));
+
             timeline.addCallback(new TimelineCallbackAdapter() {
                 private long lastChange = 0;
                 private boolean lastState = false;
-                
+
                 @Override
                 public void onTimelinePulse(float durationFraction, float timelinePosition) {
-                    int currentSecond = (int) (durationFraction*timeline.getDuration()/1000);
+                    int currentSecond = (int) (durationFraction * timeline.getDuration() / 1000);
                     if (currentSecond != lastChange) {
                         lastChange = currentSecond;
                         updateButton.setIcon((lastState) ? updateImageButtonOn : updateImageButtonOff);
                         lastState = !lastState;
                     }
                 }
-                
+
                 @Override
-                public void onTimelineStateChanged(TimelineState oldState,
-                        TimelineState newState, float durationFraction,
-                        float timelinePosition) {
+                public void onTimelineStateChanged(TimelineState oldState, TimelineState newState, float durationFraction, float timelinePosition) {
                     if (newState == TimelineState.DONE) {
                         updateButton.setIcon(updateImageButtonOn);
                     }
                 }
             });
-            
+
             timeline.setDuration(30000);
             timeline.play();
         }

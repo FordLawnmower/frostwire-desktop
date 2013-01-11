@@ -20,39 +20,33 @@ package com.limegroup.gnutella.gui.themes;
 
 import java.awt.Color;
 
-import javax.swing.border.TitledBorder;
-
 /**
  * 
  * @author gubatron
  * @author aldenml
  *
  */
-public interface SkinCustomUI {
+public final class SkinLinearGradient {
 
-    public static final String CLIENT_PROPERTY_GRADIENT_BACKGROUND = "CLIENT_PROPERTY_GRADIENT_BACKGROUND";
+    private final Color start;
+    private final Color end;
+    private final boolean horizontal;
 
-    public static final String CLIENT_PROPERTY_DARK_DARK_NOISE = "CLIENT_PROPERTY_DARK_DARK_NOISE";
-    public static final String CLIENT_PROPERTY_DARK_NOISE = "CLIENT_PROPERTY_DARK_NOISE";
-    public static final String CLIENT_PROPERTY_LIGHT_NOISE = "CLIENT_PROPERTY_LIGHT_NOISE";
+    public SkinLinearGradient(Color start, Color end, boolean horizontal) {
+        this.start = start;
+        this.end = end;
+        this.horizontal = horizontal;
+    }
 
-    public Color getDarkDarkNoise();
+    public Color getStart() {
+        return start;
+    }
 
-    public Color getDarkNoise();
+    public Color getEnd() {
+        return end;
+    }
 
-    public Color getLightNoise();
-
-    public Color getDarkBorder();
-
-    public Color getLightBorder();
-
-    public TitledBorder createTitledBorder(String title);
-
-    public Color getLightForegroundColor();
-
-    public Color getTabButtonForegroundColor();
-
-    public Color getFilterTitleTopColor();
-
-    public Color getFilterTitleColor();
+    public boolean isHorizontal() {
+        return horizontal;
+    }
 }

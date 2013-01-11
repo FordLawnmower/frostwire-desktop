@@ -51,6 +51,7 @@ import com.frostwire.gui.themes.next.NextCustomUI;
 import com.limegroup.gnutella.gui.themes.SkinComboBoxUI;
 import com.limegroup.gnutella.gui.themes.SkinCustomUI;
 import com.limegroup.gnutella.gui.themes.SkinListUI;
+import com.limegroup.gnutella.gui.themes.SkinPanelUI;
 import com.limegroup.gnutella.gui.themes.SkinProgressBarUI;
 import com.limegroup.gnutella.gui.themes.SkinRangeSliderUI;
 import com.limegroup.gnutella.gui.themes.SkinTabbedPaneUI;
@@ -246,6 +247,11 @@ public class SubstanceThemeSetter implements ThemeSetter {
     public ComponentUI createProgressBarUI(JComponent comp) {
         SubstanceCoreUtilities.testComponentCreationThreadingViolation(comp);
         return new SkinProgressBarUI();
+    }
+    
+    public ComponentUI createPanelUI(JComponent comp) {
+        SubstanceCoreUtilities.testComponentCreationThreadingViolation(comp);
+        return new SkinPanelUI();
     }
 
     // windows font policy http://msdn.microsoft.com/en-us/library/windows/desktop/aa511282.aspx

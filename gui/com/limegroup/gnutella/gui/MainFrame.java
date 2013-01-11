@@ -68,7 +68,7 @@ import com.limegroup.gnutella.settings.ApplicationSettings;
  * This class constructs the main <tt>JFrame</tt> for the program as well as 
  * all of the other GUI classes.  
  */
-public final class MainFrame implements RefreshListener, ThemeObserver {
+public final class MainFrame implements ThemeObserver {
 
     /**
      * Handle to the <tt>JTabbedPane</tt> instance.
@@ -232,10 +232,10 @@ public final class MainFrame implements RefreshListener, ThemeObserver {
         contentPane.add(APPLICATION_HEADER, "dock north");
         contentPane.add(TABBED_PANE);
         contentPane.add(getStatusLine().getComponent(), "dock south, shrink 0");
+
         setMinimalSize(FRAME, TABBED_PANE, APPLICATION_HEADER, TABBED_PANE, getStatusLine().getComponent());
 
         ThemeMediator.addThemeObserver(this);
-        GUIMediator.addRefreshListener(this);
 
         if (ApplicationSettings.MAGNET_CLIPBOARD_LISTENER.getValue()) {
             FRAME.addWindowListener(MagnetClipboardListener.getInstance());
@@ -378,13 +378,6 @@ public final class MainFrame implements RefreshListener, ThemeObserver {
         }
     }
 
-    /**
-     * Should be called whenever state may have changed, so MainFrame can then
-     * re-layout window (if necessary).
-     */
-    public void refresh() {
-    }
-
     final BTDownloadMediator getBTDownloadMediator() {
         if (BT_DOWNLOAD_MEDIATOR == null) {
 
@@ -455,7 +448,6 @@ public final class MainFrame implements RefreshListener, ThemeObserver {
      */
     public final void setSearching(boolean searching) {
         LOGO_PANEL.setSearching(searching);
-        refresh();
     }
 
     public Tabs getSelectedTab() {
