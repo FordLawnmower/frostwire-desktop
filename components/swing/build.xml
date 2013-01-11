@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="laf" basedir="." default="compile-src">
+<project name="swing" basedir="." default="compile-src">
 
 	<description>
-		FrostWire component 'laf'.
+		FrostWire component 'swing'.
 	</description>
 	
     <import file="../common/build-macros.xml" />
     <import file="../common/build.xml"/>
     
-    <target name="initialize" depends="lw-common.initialize" unless="initialized.laf">
-        <do.setup-properties component="laf">
+    <target name="initialize" depends="lw-common.initialize" unless="initialized.swing">
+        <do.setup-properties component="swing">
 			<src-classpath>
 				<pathelement location="${limewire.lib.jars}/commons-logging.jar"/>
 			    <path refid="build.limewire.components.common.buildpath"/>
@@ -18,59 +18,59 @@
     </target>
 	
 	<target name="clean" depends="lw-common.clean">
-	    <do.clean component="laf"/>
+	    <do.clean component="swing"/>
 	</target>
     
     <target name="compile" depends="lw-common.compile">
-    	<do.compile component="laf"/>
+    	<do.compile component="swing"/>
     </target>
 	
 	<target name="compile-src" depends="lw-common.compile-src">
-	    <do.compile-src component="laf" encoding="ISO-8859-1"/>
+	    <do.compile-src component="swing" encoding="ISO-8859-1"/>
 	</target>
     
 	<target name="clean-src" depends="lw-common.clean-src">
-	    <do.clean-src component="laf"/>
+	    <do.clean-src component="swing"/>
 	</target>
 	
 	<target name="compile-tests">
-	    <do.compile-tests component="laf"/>
+	    <do.compile-tests component="swing"/>
 	</target>
 	
 	<target name="clean-tests">
-	    <do.clean-tests component="laf"/>
+	    <do.clean-tests component="swing"/>
 	</target>
 	
 	<target name="test" if="class" depends="compile">
-	    <do.test component="laf" class="${class}"/>
+	    <do.test component="swing" class="${class}"/>
 	</target>
 	
 	<target name="test-package" if="package" depends="compile">
-	    <do.test-package component="laf" package="${package}"/>
+	    <do.test-package component="swing" package="${package}"/>
 	</target>
 	
 	<target name="test-all" depends="compile">
-	    <do.test-all component="laf"/>
+	    <do.test-all component="swing"/>
 	</target>
     
     <target name="jar" depends="initialize, compile-src">
-        <do.jar component="laf"/>
+        <do.jar component="swing"/>
     </target>
     
 	<target name="javadoc" depends="initialize, compile-src">
-    	<do.javadoc component="laf"/>
+    	<do.javadoc component="swing"/>
 	</target>
     
     <target name="clean-dist" depends="initialize">
-        <do.clean-dist component="laf"/>
+        <do.clean-dist component="swing"/>
     </target>
 	
     <target name="with.clover" depends="initialize">
-        <do.clover-setup component="laf"/>
+        <do.clover-setup component="swing"/>
 	</target>
     
     <target name="clover2html" depends="initialize">
-        <do.clover2html component="laf"/>
+        <do.clover2html component="swing"/>
     </target>
     
 </project>

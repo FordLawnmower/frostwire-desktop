@@ -12,7 +12,7 @@
 	<classpathentry kind="src" path="components/alexandria/src/main/java"/>
 	<classpathentry kind="src" path="components/medialib/src/main/java"/>
 	<classpathentry kind="src" path="components/jdownloader/src/main/java"/>
-	<classpathentry kind="src" path="components/laf/src/main/java"/>
+	<classpathentry kind="src" path="components/swing/src/main/java"/>
 	<classpathentry excluding="build.xml" kind="src" path="core">
 		<attributes>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="frostwire-desktop/lib/native"/>

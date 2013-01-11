@@ -35,6 +35,8 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.pushingpixels.substance.internal.utils.SubstanceTextUtilities;
+
 import net.miginfocom.swing.MigLayout;
 
 import com.frostwire.gui.library.LibraryMediator;
@@ -215,6 +217,7 @@ public final class MediaPlayerComponent implements MediaPlayerListener, RefreshL
 
         panel.add(progressCurrentTime, "wrap, span 1 2, aligny bottom");
         JLabel l = new JLabel("Test Test");
+        l.putClientProperty(SubstanceTextUtilities.ENFORCE_FG_COLOR, true);
         l.setForeground(Color.WHITE);
         panel.add(l, "");
         panel.add(PROGRESS, "wrap, growx");
