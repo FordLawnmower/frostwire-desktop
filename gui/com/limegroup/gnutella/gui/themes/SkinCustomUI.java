@@ -56,7 +56,7 @@ public interface SkinCustomUI {
 
     public Color getFilterTitleColor();
     
-    public SkinLinearGradient getApplicationHeaderBackground();
+    public SkinLinearGradient getAppHeaderBackground();
     
     public SkinLinearGradient getPlayerBackground();
 }

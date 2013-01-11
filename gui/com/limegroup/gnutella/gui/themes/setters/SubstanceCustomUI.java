@@ -48,6 +48,10 @@ public class SubstanceCustomUI implements SkinCustomUI {
 
     public static final Color TAB_BUTTON_FOREGROUND = new Color(0x6489a8);
 
+    private static final SkinLinearGradient APP_HEADER_BACKGROUND = new SkinLinearGradient(new Color(51, 94, 137), new Color(37, 70, 102), false);
+
+    private static final SkinLinearGradient PLAYER_BACKGROUND = new SkinLinearGradient(new Color(49, 92, 134), new Color(39, 71, 104), false);
+
     public Color getDarkDarkNoise() {
         return DARK_DARK_NOISE;
     }
@@ -95,12 +99,12 @@ public class SubstanceCustomUI implements SkinCustomUI {
     }
 
     @Override
-    public SkinLinearGradient getApplicationHeaderBackground() {
-        return new SkinLinearGradient(Color.BLUE, Color.RED, false);
+    public SkinLinearGradient getAppHeaderBackground() {
+        return APP_HEADER_BACKGROUND;
     }
 
     @Override
     public SkinLinearGradient getPlayerBackground() {
-        return new SkinLinearGradient(Color.BLUE, Color.RED, false);
+        return PLAYER_BACKGROUND;
     }
 }

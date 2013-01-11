@@ -103,7 +103,7 @@ public class ApplicationHeader extends JPanel implements ThemeObserver, RefreshL
     private JPanel eastPanel;
 
     public ApplicationHeader(Map<Tabs, Tab> tabs) {
-        putClientProperty(SkinCustomUI.CLIENT_PROPERTY_GRADIENT_BACKGROUND, ThemeMediator.CURRENT_THEME.getCustomUI().getApplicationHeaderBackground());
+        putClientProperty(SkinCustomUI.CLIENT_PROPERTY_GRADIENT_BACKGROUND, ThemeMediator.CURRENT_THEME.getCustomUI().getAppHeaderBackground());
         setMinimumSize(new Dimension(300, 54));
         setLayout(new BorderLayout());
 
