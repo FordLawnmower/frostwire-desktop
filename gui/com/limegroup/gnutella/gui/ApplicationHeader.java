@@ -18,7 +18,7 @@
 
 package com.limegroup.gnutella.gui;
 
-import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -45,6 +45,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
+import net.miginfocom.swing.MigLayout;
+
+import org.pushingpixels.flamingo.api.common.JCommandButton;
+import org.pushingpixels.flamingo.api.common.JCommandMenuButton;
+import org.pushingpixels.flamingo.api.common.popup.JCommandPopupMenu;
+import org.pushingpixels.flamingo.api.common.popup.JPopupPanel;
+import org.pushingpixels.flamingo.api.common.popup.PopupPanelCallback;
 import org.pushingpixels.substance.internal.utils.SubstanceTextUtilities;
 import org.pushingpixels.trident.Timeline;
 import org.pushingpixels.trident.Timeline.TimelineState;
@@ -63,7 +70,7 @@ import com.limegroup.gnutella.gui.themes.ThemeObserver;
  * @author aldenml
  *
  */
-public class ApplicationHeader extends JPanel implements ThemeObserver, RefreshListener {
+public final class ApplicationHeader extends JPanel implements ThemeObserver, RefreshListener {
 
     /*
     * The property to store the selected icon in.
@@ -105,27 +112,42 @@ public class ApplicationHeader extends JPanel implements ThemeObserver, RefreshL
     public ApplicationHeader(Map<Tabs, Tab> tabs) {
         putClientProperty(SkinCustomUI.CLIENT_PROPERTY_GRADIENT_BACKGROUND, ThemeMediator.CURRENT_THEME.getCustomUI().getAppHeaderBackground());
         setMinimumSize(new Dimension(300, 54));
-        setLayout(new BorderLayout());
+        setLayout(new MigLayout());
 
         headerButtonBackgroundSelected = GUIMediator.getThemeImage("selected_header_button_background").getImage();
         headerButtonBackgroundUnselected = GUIMediator.getThemeImage("unselected_header_button_background").getImage();
 
-        addTabButtons(tabs);
-        addLogoPanel();
+        JCommandButton button1 = new JCommandButton("Type");
+        button1.setPopupCallback(new PopupPanelCallback() {
 
-        addEastPanel();
+            @Override
+            public JPopupPanel getPopupPanel(JCommandButton commandButton) {
+                JCommandPopupMenu menu = new JCommandPopupMenu();
+                menu.addMenuButton(new JCommandMenuButton("Audio", null));
+                menu.addMenuButton(new JCommandMenuButton("Video", null));
+                menu.addMenuButton(new JCommandMenuButton("Pictures", null));
+                menu.addMenuButton(new JCommandMenuButton("Programs", null));
+                menu.addMenuButton(new JCommandMenuButton("Documents", null));
+                menu.addMenuButton(new JCommandMenuButton("Torrents", null));
+                return menu;
+            }
+        });
+        button1.setCommandButtonKind(JCommandButton.CommandButtonKind.POPUP_ONLY);
+        button1.putClientProperty(SubstanceTextUtilities.ENFORCE_FG_COLOR, true);
+        button1.setForeground(Color.WHITE);
+        add(button1);
+
+        addTabButtons(tabs);
+        add(logoPanel = new LogoPanel());
+
+        eastPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        add(eastPanel);
+
         addUpdateButton();
 
         GUIMediator.addRefreshListener(this);
-
     }
 
-    private void addEastPanel() {
-        eastPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
-        eastPanel.setOpaque(false);
-        add(eastPanel, BorderLayout.LINE_END);
-    }
-    
     private void addUpdateButton() {
         updateImageButtonOn = GUIMediator.getThemeImage("update_button_on");
         updateImageButtonOff = GUIMediator.getThemeImage("update_button_off");
@@ -150,10 +172,6 @@ public class ApplicationHeader extends JPanel implements ThemeObserver, RefreshL
         });
 
         eastPanel.add(updateButton);
-    }
-
-    private void addLogoPanel() {
-        add(logoPanel = new LogoPanel(), BorderLayout.CENTER);
     }
 
     public LogoPanel getLogoPanel() {
@@ -191,7 +209,7 @@ public class ApplicationHeader extends JPanel implements ThemeObserver, RefreshL
             button.setSelected(t.equals(GUIMediator.Tabs.SEARCH));
         }
 
-        add(buttonContainer, BorderLayout.LINE_START);
+        add(buttonContainer);
     }
 
     /** Given a Tab mark that button as selected 
@@ -203,7 +221,7 @@ public class ApplicationHeader extends JPanel implements ThemeObserver, RefreshL
      */
     public void selectTab(Tab t) {
         Component[] components = getComponents();
-        JPanel buttonContainer = (JPanel) components[0];
+        JPanel buttonContainer = (JPanel) components[1];
         Component[] buttons = buttonContainer.getComponents();
         for (Component c : buttons) {
             if (c instanceof AbstractButton) {

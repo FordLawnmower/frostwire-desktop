@@ -145,6 +145,45 @@ public class PluginManager {
 			}
 		}
 	}
+	
+	protected List<String> getPluginClass2(URL pluginUrl) {
+	    List<String> classes = new LinkedList<String>();
+        InputStream is = null;
+        InputStreamReader isr = null;
+        try {
+            XMLElement xml = new XMLElement();
+            is = pluginUrl.openStream();
+            isr = new InputStreamReader(is);
+            xml.parseFromReader(isr);
+            if (!this.mainTag.equals(xml.getName()))
+                return null;
+            Enumeration children = xml.enumerateChildren();
+            while (children.hasMoreElements()) {
+                XMLElement child = (XMLElement) children.nextElement();
+                if (!this.pluginTag.equals(child.getName()))
+                    continue;
+                if (child.countChildren() != 0)
+                    return null;
+                classes.add(child.getContent());
+            }
+            return classes;
+        } catch (Exception exc) {
+            return null;
+        } finally {
+            if (isr != null) {
+                try {
+                    isr.close();
+                } catch (Exception e) {
+                }
+            }
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (Exception e) {
+                }
+            }
+        }
+    }
 
 	protected Object getPlugin(URL pluginUrl) throws Exception {
 		String pluginClassName = this.getPluginClass(pluginUrl);
@@ -161,6 +200,28 @@ public class PluginManager {
 			return null;
 		return pluginInstance;
 	}
+	
+	protected List<Object> getPlugin2(URL pluginUrl) throws Exception {
+	    List<Object> plugins  = new LinkedList<Object>();
+	    List<String> pluginClassNames = this.getPluginClass2(pluginUrl);
+        if (pluginClassNames == null || pluginClassNames.isEmpty())
+            return null;
+        ClassLoader classLoader = (ClassLoader) UIManager.get("ClassLoader");
+        if (classLoader == null)
+            classLoader = Thread.currentThread().getContextClassLoader();
+        
+        for (String pluginClassName : pluginClassNames) {
+            Class pluginClass = Class.forName(pluginClassName, true, classLoader);
+            if (pluginClass == null)
+                continue;
+            Object pluginInstance = pluginClass.newInstance();
+            if (pluginInstance == null)
+                continue;
+            
+            plugins.add(pluginInstance);
+        }
+        return plugins;
+    }
 
 	/**
 	 * Returns a collection of all available plugins.
@@ -206,9 +267,11 @@ public class PluginManager {
 			Enumeration urls = cl.getResources(this.xmlName);
 			while (urls.hasMoreElements()) {
 				URL pluginUrl = (URL) urls.nextElement();
-				Object pluginInstance = this.getPlugin(pluginUrl);
-				if (pluginInstance != null)
-					this.plugins.add(pluginInstance);
+				//Object pluginInstance = this.getPlugin(pluginUrl);
+				for (Object pluginInstance : this.getPlugin2(pluginUrl)) {
+				    if (pluginInstance != null)
+				        this.plugins.add(pluginInstance);
+				}
 
 			}
 		} catch (Exception exc) {

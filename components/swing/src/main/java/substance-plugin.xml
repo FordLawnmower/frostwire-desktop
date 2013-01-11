@@ -1,4 +1,5 @@
 <laf-plugin>
 	<component-plugin-class>org.pushingpixels.substance.internal.plugin.BasePlugin</component-plugin-class>
+	<component-plugin-class>org.pushingpixels.substance.flamingo.FlamingoPlugin</component-plugin-class>
 	<skin-plugin-class>org.pushingpixels.substance.internal.plugin.BaseSkinPlugin</skin-plugin-class>
 </laf-plugin>
