@@ -26,6 +26,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Map;
 
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
@@ -35,9 +37,9 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.pushingpixels.substance.internal.utils.SubstanceTextUtilities;
-
 import net.miginfocom.swing.MigLayout;
+
+import org.pushingpixels.substance.internal.utils.SubstanceTextUtilities;
 
 import com.frostwire.gui.library.LibraryMediator;
 import com.frostwire.gui.library.LibraryUtils;
@@ -51,8 +53,6 @@ import com.limegroup.gnutella.gui.RefreshListener;
 import com.limegroup.gnutella.gui.themes.SkinCustomUI;
 import com.limegroup.gnutella.gui.themes.ThemeMediator;
 import com.limegroup.gnutella.gui.themes.ThemeObserver;
-import com.limegroup.gnutella.util.FrostWireUtils;
-import com.limegroup.gnutella.util.Tagged;
 
 /**
  * This class sets up JPanel with MediaPlayer on it, and takes care of GUI
@@ -127,7 +127,7 @@ public final class MediaPlayerComponent implements MediaPlayerListener, RefreshL
 
     private JToggleButton SHUFFLE_BUTTON;
 
-    private JToggleButton LOOP_BUTTON;
+    private JButton LOOP_BUTTON;
 
     private CardLayout PLAY_PAUSE_CARD_LAYOUT;
 
@@ -243,15 +243,13 @@ public final class MediaPlayerComponent implements MediaPlayerListener, RefreshL
         SHUFFLE_BUTTON.setToolTipText(I18n.tr("Shuffle songs"));
         SHUFFLE_BUTTON.setSelected(PLAYER.isShuffle());
 
-        LOOP_BUTTON = new JToggleButton();
+        LOOP_BUTTON = new JButton();
         LOOP_BUTTON.setBorderPainted(false);
         LOOP_BUTTON.setContentAreaFilled(false);
         LOOP_BUTTON.setBackground(null);
-        LOOP_BUTTON.setIcon(GUIMediator.getThemeImage("loop_off"));
-        LOOP_BUTTON.setSelectedIcon(GUIMediator.getThemeImage("loop_on"));
+        LOOP_BUTTON.setIcon(getCurrentLoopButtonImage());
         LOOP_BUTTON.setToolTipText(I18n.tr("Repeat songs"));
-        LOOP_BUTTON.setSelected(PLAYER.getRepeatMode() == RepeatMode.All);
-
+        
         SHUFFLE_BUTTON.addActionListener(new ActionListener() {
 
             @Override
@@ -263,12 +261,22 @@ public final class MediaPlayerComponent implements MediaPlayerListener, RefreshL
         LOOP_BUTTON.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                PLAYER.setRepeatMode((LOOP_BUTTON.isSelected()) ? RepeatMode.All : RepeatMode.None);
+                PLAYER.setRepeatMode( PLAYER.getRepeatMode().getNextState());
+                LOOP_BUTTON.setIcon(getCurrentLoopButtonImage());
             }
         });
 
     }
 
+    private ImageIcon getCurrentLoopButtonImage() {
+    	if (PLAYER.getRepeatMode() == RepeatMode.All) {
+    		return GUIMediator.getThemeImage("loop_on");
+    	} else if (PLAYER.getRepeatMode() == RepeatMode.Song) {
+    		return GUIMediator.getThemeImage("loop_on");
+    	} else { // RepeatMode.None
+    		return GUIMediator.getThemeImage("loop_off");
+    	}
+    }
     private void showPauseButton() {
         PLAY_PAUSE_CARD_LAYOUT.show(PLAY_PAUSE_BUTTON_CONTAINER, "PAUSE");
     }
@@ -543,82 +551,9 @@ public final class MediaPlayerComponent implements MediaPlayerListener, RefreshL
         return res.toString();
     }
 
-    String addToPlaylist(Map<String, String> args) {
+    
 
-        Tagged<String> urlString = FrostWireUtils.getArg(args, "url", "AddToPlaylist");
-        if (!urlString.isValid())
-            return urlString.getValue();
-
-        Tagged<String> nameString = FrostWireUtils.getArg(args, "name", "AddtoPlaylist");
-        if (!nameString.isValid())
-            return nameString.getValue();
-
-        Tagged<String> lengthString = FrostWireUtils.getArg(args, "length", "AddtoPlaylist");
-        if (!lengthString.isValid())
-            return lengthString.getValue();
-
-        Tagged<String> artistString = FrostWireUtils.getArg(args, "artist", "AddtoPlaylist");
-        if (!artistString.isValid())
-            return artistString.getValue();
-
-        Tagged<String> albumString = FrostWireUtils.getArg(args, "album", "AddtoPlaylist");
-        if (!albumString.isValid())
-            return albumString.getValue();
-
-        // We won't accept full URLs
-        // String baseDir = "http://riaa.com";
-        // int port = 0;
-        // if (port > 0) {
-        // baseDir += ":" + port;
-        // }
-
-        // String url = baseDir + urlString.getValue();
-        // try {
-        // String decodedURL = URLDecoder.decode(url);
-        // URL u = new URL(decodedURL);
-        // PlayListItem song = new PlayListItem(u.toURI(), new AudioSource(u),
-        // nameString.getValue(), false);
-        // GUIMediator.instance().launchAudio(song);
-        // } catch (IOException e) {
-        // ErrorService.error(e, "invalid URL:" + url);
-        // return "ERROR:invalid.url:" + url;
-        // } catch (URISyntaxException e) {
-        // ErrorService.error(e, "invalid URL:" + url);
-        // return "ERROR:invalid.url:" + url;
-        // }
-        return "ok";
-    }
-
-    String playURL(Map<String, String> args) {
-
-        Tagged<String> urlString = FrostWireUtils.getArg(args, "url", "PlayURL");
-        if (!urlString.isValid())
-            return urlString.getValue();
-
-        // We won't accept full URLs
-        // String baseDir = "http://riaa.com";
-        // int port = 0;
-        // if (port > 0) {
-        // baseDir += ":" + port;
-        // }
-
-        // String url = baseDir + urlString.getValue();
-        // String name = getName(url);
-        // try {
-        // String decodedURL = URLDecoder.decode(url);
-        // URL u = new URL(decodedURL);
-        // PlayListItem song = new PlayListItem(u.toURI(), new AudioSource(u),
-        // name, false);
-        // GUIMediator.instance().launchAudio(song);
-        // } catch (IOException e) {
-        // ErrorService.error(e, "invalid URL:" + url);
-        // return "ERROR:invalid.url:" + url;
-        // } catch (URISyntaxException e) {
-        // ErrorService.error(e, "invalid URL:" + url);
-        // return "ERRORinvalid.url:" + url;
-        // }
-        return "ok";
-    }
+    
 
     // private String getName(String url) {
     // int ilast = url.lastIndexOf('/');

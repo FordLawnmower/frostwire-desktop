@@ -55,7 +55,7 @@ import com.limegroup.gnutella.gui.MPlayerMediator;
 public class 
 MPlayerInstance 
 {
-	private static final boolean LOG	= false;
+	private static final boolean LOG	= true;
 			
 	private static File BINARY_PATH;
 
@@ -266,31 +266,42 @@ MPlayerInstance
 //			
 //			cmdList.add("-framedrop");
 			
-			//Set the initial volume.
-			cmdList.add("-volume");
-			cmdList.add( String.valueOf(initialVolume) );
-			
+            //Set the initial volume.
+            cmdList.add("-volume");
+            cmdList.add(String.valueOf(initialVolume));
+
             if (OSUtils.isLinux()) {
-            	cmdList.add("-zoom"); // auto zooms video to fit canvas area
+                cmdList.add("-zoom"); // auto zooms video to fit canvas area
             }
-            
-			if(OSUtils.isMacOSX()) {
-            	cmdList.add(fileOrUrl);
+
+            if (OSUtils.isMacOSX()) {
+                cmdList.add(fileOrUrl);
             } else if (OSUtils.isWindows()) {
-            	String shortFileName = SystemUtils.getShortFileName(fileOrUrl);
-            	if (fileOrUrl.length() > 250 && shortFileName != null) {
-            		cmdList.add(String.format("\"%s\"", shortFileName));
-            	} else {
-            		cmdList.add(String.format("\"%s\"", fileOrUrl));
-            	}
+
+                if (fileOrUrl.length() > 250 && !fileOrUrl.toLowerCase().startsWith("http://")) {
+                    String shortFileName = SystemUtils.getShortFileName(fileOrUrl);
+
+                    if (shortFileName == null) {
+                        shortFileName = fileOrUrl;
+                    }
+                    
+                    cmdList.add(String.format("\"%s\"", shortFileName));
+                } else {
+                    cmdList.add(String.format("\"%s\"", fileOrUrl));
+                }
+                
             } else if (OSUtils.isLinux()) {
-            	cmdList.add(fileOrUrl);
+                cmdList.add(fileOrUrl);
             }
 			
             
-			String[] cmd = cmdList.toArray(new String[cmdList.size()]);
+			String[] cmd = cmdList.toArray(new String[0]);
 			String cmdString = Arrays.toString(cmd).replace(", ", " ");
 			System.out.println(String.format("starting mplayer: %s", cmdString));
+			
+			try {
+			    System.out.println("File Path: [" + cmdList.get(cmdList.size() - 1) + "]");
+			} catch (Exception e9) { }
 			
 			try {
 				ProcessBuilder pb = new ProcessBuilder(cmd);
@@ -609,9 +620,9 @@ MPlayerInstance
 				
 				seekingSendTime	= -1;
 				
-				sendCommand("seek " + value + " 2");
+				sendCommand("seek " + value + " 2", CommandPauseMode.KEEP);
 				
-				sendCommand("get_time_pos");
+				sendCommand("get_time_pos", CommandPauseMode.KEEP);
 			}
 		}
 	}
