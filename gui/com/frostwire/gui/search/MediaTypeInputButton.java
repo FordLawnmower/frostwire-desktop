@@ -73,6 +73,7 @@ public class MediaTypeInputButton extends JCommandButton {
             public JPopupPanel getPopupPanel(JCommandButton commandButton) {
                 JCommandPopupMenu menu = new JCommandPopupMenu();
                 addSchemas(menu);
+                menu.setMinimumSize(new Dimension(200, 200));
                 return menu;
             }
         });
