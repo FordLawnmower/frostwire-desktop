@@ -29,7 +29,9 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.channels.FileChannel;
+import java.nio.channels.ReadableByteChannel;
 
 import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
@@ -38,12 +40,17 @@ import javax.swing.JPanel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.coremedia.iso.BoxParser;
+import com.coremedia.iso.IsoFile;
+import com.coremedia.iso.PropertyBoxParserImpl;
+import com.coremedia.iso.boxes.Box;
+import com.coremedia.iso.boxes.ContainerBox;
+import com.coremedia.iso.boxes.apple.AppleDataBox;
 import com.frostwire.jpeg.JPEGImageIO;
 import com.frostwire.mp3.ID3v2;
 import com.frostwire.mp3.Mp3File;
-import com.frostwire.mp4.IsoFile;
-import com.frostwire.mp4.Path;
-import com.frostwire.mp4.boxes.apple.AppleDataBox;
+import com.googlecode.mp4parser.AbstractBox;
+import com.googlecode.mp4parser.util.Path;
 import com.limegroup.gnutella.gui.GUIMediator;
 import com.limegroup.gnutella.gui.themes.ThemeMediator;
 import com.limegroup.gnutella.gui.themes.ThemeObserver;
@@ -179,13 +186,24 @@ public final class LibraryCoverArt extends JPanel implements ThemeObserver {
         try {
             FileInputStream fis = new FileInputStream(filename);
             try {
+                BoxParser parser = new PropertyBoxParserImpl() {
+                    @Override
+                    public Box parseBox(ReadableByteChannel byteChannel, ContainerBox parent) throws IOException {
+                        Box box = super.parseBox(byteChannel, parent);
+
+                        if (box instanceof AbstractBox) {
+                            ((AbstractBox) box).parseDetails();
+                        }
+
+                        return box;
+                    }
+                };
                 FileChannel inFC = fis.getChannel();
-                IsoFile iso = new IsoFile(inFC);
+                IsoFile iso = new IsoFile(inFC, parser);
 
-                Path p = new Path(iso);
-
-                AppleDataBox data = (AppleDataBox) p.getPath("/moov/udta/meta/ilst/covr/data");
+                AppleDataBox data = (AppleDataBox) Path.getPath(iso.getMovieBox(), "/moov/udta/meta/ilst/covr/data");
                 if (data != null) {
+                    data.parseDetails();
                     if ((data.getFlags() & 0x1) == 0x1) { // jpg
                         byte[] imageBytes = data.getData();
                         try {

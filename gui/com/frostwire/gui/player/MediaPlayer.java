@@ -43,12 +43,12 @@ import org.limewire.util.FileUtils;
 import org.limewire.util.FilenameUtils;
 import org.limewire.util.OSUtils;
 
+import com.coremedia.iso.IsoFile;
 import com.frostwire.alexandria.Playlist;
 import com.frostwire.alexandria.PlaylistItem;
 import com.frostwire.gui.library.LibraryMediator;
 import com.frostwire.gui.mplayer.MPlayer;
 import com.frostwire.mp3.Mp3File;
-import com.frostwire.mp4.IsoFile;
 import com.frostwire.mplayer.IcyInfoListener;
 import com.frostwire.mplayer.MediaPlaybackState;
 import com.frostwire.mplayer.PositionListener;
